@@ -1,0 +1,14 @@
+{
+  "exp_name": "exp_gate_phase_diagram",
+  "seed": 0,
+  "gates": ["not", "cnot", "and"],
+  "params_base": {
+    "degeneracy": 3,
+    "base_mem_noise": 0.05
+  },
+  "grid": {
+    "p_gate": [0.0, 0.02, 0.05, 0.1],
+    "barrier": [0.0, 2.0, 6.0],
+    "tau": [1, 2, 4]
+  }
+}

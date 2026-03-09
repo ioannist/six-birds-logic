@@ -1,0 +1,79 @@
+\begin{tikzpicture}[
+    >=Latex,
+    font=\small,
+    line width=0.5pt,
+    box/.style={
+        draw,
+        rounded corners,
+        fill=black!2,
+        align=left,
+        inner sep=6pt,
+        text width=#1
+    },
+    box/.default=3.3cm,
+    arrowlabel/.style={
+        font=\footnotesize,
+        align=center,
+        fill=white,
+        inner sep=1pt
+    },
+    note/.style={
+        font=\footnotesize\itshape,
+        align=center,
+        fill=white,
+        inner sep=1pt
+    }
+]
+
+\node[box=2.9cm] (micro) {
+\textbf{Microstates \(Z\)}\\[2pt]
+\(\bullet\ z_1 \qquad \bullet\ z_4\)\\
+\(\bullet\ z_2 \qquad \bullet\ z_5\)\\
+\(\bullet\ z_3 \qquad \bullet\ z_6\)\\[2pt]
+messy substrate detail
+};
+
+\node[box=3.5cm, right=16mm of micro] (packaged) {
+\textbf{P5 packaged predicates / bits}\\[2pt]
+\(h=\tilde h \circ f\)\\
+\(\Pi_A(z)=\mathbf{1}[z\in A]\)\\[2pt]
+\(\boxed{0}\ \ \boxed{1}\) stable carriers
+};
+
+\node[note, above=2mm of packaged] (p4note) {P4 staging / sectors\\keep carriers stable};
+
+\node[box=3.4cm, right=18mm of packaged] (audit) {
+\textbf{P6 audit / closure checks}\\[2pt]
+stability \(S_\tau\)\\
+route mismatch RM\\
+defect \(\Delta_{\tau,f}\)\\
+loss \(U_{\text{loss}}\)\\
+apparent EPR \(\sigma_{\mathrm{app}}\)
+};
+
+\node[box=3.9cm, above=9mm of audit] (feasibility) {
+\textbf{P2 feasibility semantics}\\[2pt]
+\(A\wedge B=A\cap B\)\\
+\(A\vee B=A\cup B\)\\
+\(\neg A=Z\setminus A\)\\
+\(A\oplus B=A\triangle B\)
+};
+
+\node[box=3.9cm, below=9mm of audit] (operators) {
+\textbf{P1 induced operators}\\[2pt]
+\(\Pi(F(z)) \approx g(\Pi(z))\)\\
+\(E_{\tau,f}(\mu)=U_f(Q_f(\mu P^\tau))\)
+};
+
+\node[note, below left=2mm and -5mm of feasibility.south east, anchor=north west] (p3note) {P3 route agreement\\must be checked};
+
+\draw[->, thick] (micro.east) -- node[arrowlabel, above]{lens \(f\)} (packaged.west);
+\draw[->, thick] (packaged.north east) -- (feasibility.west);
+\draw[->, thick] (packaged.south east) -- (operators.west);
+\draw[->, thick] (feasibility.south) -- (audit.north);
+\draw[->, thick] (operators.north) -- (audit.south);
+
+\node[draw=black!50, dashed, rounded corners, inner sep=8pt, fit=(packaged)(p4note)(feasibility)(operators)(audit)(p3note)] (layer) {};
+\node[font=\small\bfseries, above=1mm of layer] {Logic layer at \((f,\tau)\)};
+
+\end{tikzpicture}

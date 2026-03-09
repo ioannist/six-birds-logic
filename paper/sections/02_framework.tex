@@ -1,0 +1,83 @@
+\section{Logic Layers, Packaging, and Closure}
+\label{sec:framework}
+
+We do not rederive the full Six Birds formalism here. For the present paper only the pieces needed to speak about logic are essential: a lens that fixes what is observable, a packaging step that stabilizes those observables into reusable carriers, an induced dynamics that may or may not close on the packaged variables, and an audit that measures persistence, mismatch, and loss. In Six Birds terms, P5 supplies the package, P2 supplies feasibility semantics, P4 supplies metastability or sector structure, P1 governs whether new effective operators can be introduced, P3 diagnoses route dependence, and P6 keeps the accounting honest. This section isolates those ingredients and turns them into a concrete criterion for what we will call a \emph{logic layer} \cite{tsiokos2026sixbirds}.
+
+\subsection{Lenses, definability, and packaged predicates}
+
+Let \(Z\) denote the microstate space and let
+\[
+f: Z \to X
+\]
+be a lens or coarse-graining map into a smaller label space \(X\). The fibers of \(f\) specify which microstates the candidate layer refuses to distinguish. A binary predicate \(h: Z \to \{0,1\}\) is \emph{definable} at that lens when it is constant on fibers, equivalently when there exists a macro-predicate \(\tilde h : X \to \{0,1\}\) such that
+\[
+h = \tilde h \circ f.
+\]
+We write \(\Sigma_f\) for the family of events or predicates definable from \(f\). \(\Sigma_f\) is the expressive content of the layer: if a distinction is not definable there, then it is not available as a logical statement at that layer.
+
+Packaging is the step that turns a mere definable distinction into a reusable symbol carrier. In the binary case, a package is a map
+\[
+\Pi : Z \to \{0,1\},
+\]
+with many microstates assigned to the same label because they are treated as equivalent for the purposes of the layer. For a definable event \(A \in \Sigma_f\), the associated packaged predicate is simply the indicator
+\[
+\Pi_A(z) = \mathbf{1}[z \in A].
+\]
+This is the point at which P5 becomes indispensable: truth values are not primitive objects but compressed labels of microstates. They remain meaningful only when P4 supplies enough staging, metastability, or sector structure for those labels to persist across the timescale on which the layer is supposed to operate.
+
+\subsection{Two complementary views of logic}
+
+The first view is semantic. In the \emph{feasibility view}, propositions are definable feasible sets and logical connectives are stable closure operations on those sets. Once a universe of admissible states is fixed, the familiar connectives are forced:
+\[
+A \wedge B = A \cap B,\qquad
+A \vee B = A \cup B,\qquad
+\neg A = Z \setminus A,
+\]
+and, for parity,
+\[
+A \oplus B = (A \setminus B) \cup (B \setminus A).
+\]
+On this view, logic is not an extra ontology layered on top of physics. It is the algebra of feasible distinctions that a lens can express and a substrate can stabilize. P2 appears here as the semantics of admissibility: propositions are gates on what states are allowed, and contradictions are simply empty feasible sets.
+
+The second view is operational. In the \emph{operator view}, a packaged bit matters only if the substrate supports induced updates on it. Let \(F : Z \to Z\) denote a micro-update, or more generally let \(P\) be a Markov kernel on \(Z\). A macro-operator \(g\) is induced on a package \(\Pi\) when the packaged description closes, at least approximately, under the underlying dynamics:
+\[
+\Pi(F(z)) \approx g(\Pi(z)).
+\]
+At the level of distributions, if \(Q_f\) denotes pushforward through the lens and \(U_f\) denotes a canonical lift back to packaged microdescriptions, the associated empirical endomap is
+\[
+E_{\tau,f}(\mu) = U_f\!\bigl(Q_f(\mu P^\tau)\bigr).
+\]
+This is the reduce--evolve--repackage route.
+In finite-state language, the same descent problem is the one studied by lumpability theory for Markov chains \cite{buchholz1994lumpability}.
+A genuine macro law requires it to agree, up to a controlled defect, with the route that reasons directly at the packaged level. P1 enters here because effective operators sometimes need to be rewritten or promoted to close cleanly. P3 enters here because route mismatch is precisely the sign that ordering, hidden protocol state, or evaluation schedule is still leaking through the coarse description.
+
+The two views are inseparable in practice. Feasibility without operator closure gives semantics that cannot be executed. Operator closure without feasibility semantics gives a convenient signal-processing description but not yet a logic. A logic layer appears only when the same packaged distinctions support both views at once.
+
+\begin{definition}[Logic layer]
+\label{def:logic-layer}
+Fix a microstate space \(Z\), a lens \(f : Z \to X\), and an evaluation window \(\tau\). A \emph{logic layer} at \((f,\tau)\) consists of a nontrivial family \(\mathcal{B} \subseteq \Sigma_f\) of binary packaged predicates together with induced macro-updates such that:
+\begin{enumerate}
+    \item \textbf{Stability.} Each \(b \in \mathcal{B}\) is metastable on the timescale \(\tau\).
+    \item \textbf{Closure.} The relevant micro-updates descend to macro-operators on the packaged variables with small closure defect.
+    \item \textbf{Feasibility semantics.} Each \(b \in \mathcal{B}\) is the indicator of a stable feasible set, and the connective operations required at the layer remain definable there.
+    \item \textbf{Auditability.} Persistence, route agreement, and information loss are measurable by explicit diagnostics.
+\end{enumerate}
+When these conditions fail, a symbolic description may still be convenient, but it does not constitute a closed logic layer in the sense used in this paper.
+\end{definition}
+
+Figure~\ref{fig:logic-layer-overview} summarizes the architecture of the notion introduced in Definition~\ref{def:logic-layer}: microstates enter the candidate logic layer only through packaging, and the resulting predicates count as logical only when both their feasibility semantics and their induced operators survive explicit audit.
+
+\begin{figure}[t]
+    \centering
+    \resizebox{0.94\linewidth}{!}{\input{figures/logic_layer_overview.tex}}
+    \caption{A logic layer is an audited closure of packaged predicates. A lens \(f\) and a packaging map compress microstates into stable binary carriers. Those carriers support two complementary views at once: feasibility semantics on definable sets and induced macro-operators on packaged symbols. The layer counts as logical only when the resulting closure survives explicit audit through stability, route mismatch, closure defect, and unretained input information diagnostics.}
+    \label{fig:logic-layer-overview}
+\end{figure}
+
+\subsection{Why the criterion is layer-relative}
+
+Definition~\ref{def:logic-layer} is intentionally stricter than merely being able to label states by zero and one. A candidate bit must remain stable long enough to matter, must support a descended operator calculus, and must survive audit. This is why the six primitives are complementary rather than redundant. P5 packages the carrier; P4 keeps it from dissolving immediately; P2 makes it semantically meaningful; P1 determines whether an effective operator vocabulary can be stabilized; P3 detects route dependence and protocol residue; P6 determines what must be paid to maintain the whole arrangement.
+
+The criterion is also intentionally broader than classical Booleanity. Complement and negation appear naturally when the relevant complements remain definable and stable at the lens. But nothing in Definition~\ref{def:logic-layer} forces every layer to have those complements available at low cost. For that reason we speak of a \emph{logic layer} rather than a \emph{Boolean layer}. The finite laboratories studied in this paper are classical-looking enough to realize NOT, AND, and XOR cleanly, but the framework itself is meant to diagnose which closures a layer actually supports rather than to decree them in advance.
+
+This perspective clarifies what the rest of the paper will measure. Section~\ref{sec:diagnostics-methods} turns the four clauses of Definition~\ref{def:logic-layer} into concrete observables: predicate stability measures the first clause, route mismatch and closure defect probe the second, feasible-set and gate semantics ground the third, and unretained input information and entropy-production proxies support the fourth. The results sections then use those diagnostics to show that parity is unusually robust as a packaged distinction, that familiar gates occupy different closure regimes, and that reversible embedding and erased output are distinct logical objects rather than notational variants.

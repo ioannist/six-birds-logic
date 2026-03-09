@@ -1,0 +1,150 @@
+\section{Diagnostics and Methods}
+\label{sec:diagnostics-methods}
+
+Definition~\ref{def:logic-layer} gives four requirements for a logic layer: stability, closure, feasibility semantics, and auditability. This section turns those four requirements into measurable quantities and summarizes the controlled laboratories in which they are evaluated. The important methodological point is that the paper is not reporting live computations from the manuscript source. All numerical values reported in Sections~\ref{sec:results-parity}--\ref{sec:results-discovery} are taken from the frozen result bundle under \path{results/final_claims/} and the source artifacts it summarizes. The manuscript does not recompute those values during drafting; it only defines the diagnostics and interprets the frozen outputs.
+Methodologically, this follows the broader Six Birds insistence that closure claims be paired with explicit audit rather than inferred from symbolic convenience alone \cite{tsiokos2026countstone,tsiokos2026minsubstrate}.
+
+\subsection{Stability and closure diagnostics}
+
+The first diagnostic is \emph{predicate stability}. For a binary packaged predicate \(b : Z \to \{0,1\}\), a Markov kernel \(P\) on \(Z\), an evaluation horizon \(\tau\), and an initial micro-distribution \(\mu\), we measure
+\[
+S_\tau(b;\mu)
+=
+\sum_{i,j} \mu_i (P^\tau)_{ij}\,\mathbf{1}[b(i)=b(j)].
+\]
+Large \(S_\tau\) means that the packaged distinction survives the timescale on which the layer is supposed to operate. In the experiments below, this quantity is used both for stable input bits in the gate laboratories and for candidate partitions in the discovery pipeline.
+
+The second diagnostic is \emph{route mismatch} (RM), which asks whether states placed in the same coarse cell really have the same coarse transition behavior. For a lens \(f : Z \to X\), define the coarse transition profile of a microstate \(i\) by
+\[
+R_\tau^f(i,x)
+=
+\sum_{j : f(j)=x} (P^\tau)_{ij}.
+\]
+If \(B_x=f^{-1}(x)\) is the fiber of \(x\) and \(\bar\omega_i^{(x)}\) are normalized weights within that fiber, then the induced macro row is
+\[
+K_{\tau,f}(x,\cdot)
+=
+\sum_{i\in B_x} \bar\omega_i^{(x)} R_\tau^f(i,\cdot),
+\]
+and the route mismatch is the weighted within-fiber discrepancy
+\[
+\mathrm{RM}_\tau(f)
+=
+\sum_x \sum_{i\in B_x}
+\bar\omega_i^{(x)}
+\bigl\|
+R_\tau^f(i,\cdot)-K_{\tau,f}(x,\cdot)
+\bigr\|_1.
+\]
+RM vanishes when coarse-grained transition behavior is fiberwise consistent. It grows when the lens collapses states whose macro futures differ. In the parity experiment we compare RM across parity, AND, and random binary lenses; in the phase-diagram and reversible-versus-erased experiments we also use stationary weighting to prevent rare states from dominating the metric.
+
+A third closure diagnostic compares two different reduction routes. Given pushforward \(Q_f\) through the lens and a canonical lift \(U_f\) back to a packaged microdescription, the \emph{closure defect}, implemented here as a distribution commutation defect, is
+\[
+\Delta_{\tau,f}(\mu)
+=
+\left\|
+Q_f(\mu P^\tau)
+-
+Q_f\!\bigl(U_f(Q_f(\mu))P^\tau\bigr)
+\right\|_1.
+\]
+The first term evolves microscopically and then reduces; the second reduces, repackages, evolves, and reduces again. Small defect means that the packaged description is genuinely closed under the dynamics. Large defect indicates that hidden microstructure or protocol residue is still leaking through the purported logic layer.
+
+Taken together, \(S_\tau\), RM, and \(\Delta_{\tau,f}\) operationalize the first two clauses of Definition~\ref{def:logic-layer}. Stability measures persistence. RM and closure defect measure whether closure has actually been achieved rather than merely asserted.
+
+\subsection{Gate-channel and information diagnostics}
+
+For gate-like behavior we work with induced input--output channels. Let \(f_{\mathrm{in}}\) be a current-state input labeling and \(f_{\mathrm{out}}\) a future-state output labeling. For each input label \(u\), we initialize uniformly over the microstates satisfying \(f_{\mathrm{in}}=u\), evolve for \(\tau\) steps, and read the output label \(y\). This defines a channel
+\[
+C_\tau(y\mid u).
+\]
+All gate metrics in the paper are derived from this induced channel, using a uniform prior over input patterns unless explicitly noted otherwise.
+
+If \(t(u)\) denotes the intended truth-table output for input \(u\), then the \emph{truth error} is
+\[
+\mathrm{err}_{\mathrm{truth}}
+=
+\frac{1}{|U|}
+\sum_{u\in U}
+\bigl[1 - C_\tau(t(u)\mid u)\bigr].
+\]
+This compares the induced channel to a chosen logical target. To measure how deterministic the channel is even without an externally supplied truth table, we also use the \emph{induced error}
+\[
+\mathrm{err}_{\mathrm{induced}}
+=
+\frac{1}{|U|}
+\sum_{u\in U}
+\left(1-\max_{y} C_\tau(y\mid u)\right),
+\]
+which vanishes only when the best-fit deterministic output is certain for every input class.
+
+The corresponding uncertainty measure is the conditional entropy
+\[
+H(\mathrm{out}\mid \mathrm{in})
+=
+-
+\frac{1}{|U|}
+\sum_{u\in U}\sum_y
+C_\tau(y\mid u)\log_2 C_\tau(y\mid u),
+\]
+with the usual convention that \(0\log 0 = 0\). This is the main entropy quantity reported in the phase-diagram results. It tracks the same phenomenon as induced error, but without collapsing uncertainty to an argmax summary.
+
+For the accounting comparisons we also use standard channel-information quantities. With the same uniform input prior,
+\[
+I(\mathrm{in};\mathrm{out})
+=
+H(\mathrm{out}) - H(\mathrm{out}\mid \mathrm{in}),
+\]
+and we define the \emph{unretained input information} by
+\[
+U_{\text{loss}}
+=
+H(\mathrm{in}) - I(\mathrm{in};\mathrm{out}).
+\]
+This is the primary information-loss proxy in the reversible-versus-erased analysis. It measures how much input information is not recoverable from the reported output channel. We also track the simpler entropy-drop proxy
+\[
+\Delta H = H(\mathrm{in}) - H(\mathrm{out}),
+\]
+but the main comparison later in the paper is expressed in terms of \(U_{\text{loss}}\), because reversible embeddings can preserve output entropy while still hiding or discarding part of the input description.
+The reversible-versus-erased comparison in Section~\ref{sec:results-reversible} is framed in the spirit of Landauer's analysis of irreversibility and Bennett's reversible-computation program \cite{landauer1961,bennett1973}.
+
+Finally, to connect information processing with embodiment, we compute entropy-production rates. For a stationary distribution \(\pi\) of the micro-kernel \(P\), the micro-level entropy production rate is
+\[
+\sigma(P)
+=
+\sum_{i,j}
+\pi_i P_{ij}
+\log
+\frac{\pi_i P_{ij}}{\pi_j P_{ji}},
+\]
+measured in nats per step. The corresponding \emph{apparent} coarse-grained entropy production is obtained by inducing a macro-kernel \(K_{\tau,f}\) on a lens \(f\) and then evaluating the same expression on that macro-kernel:
+\[
+\sigma_{\mathrm{app}}(f,\tau)
+=
+\sigma(K_{\tau,f}).
+\]
+Micro and apparent EPR coincide on the identity lens and can diverge under coarse-graining. In this paper they serve as audit variables rather than as stand-alone thermodynamic claims. All Shannon quantities are reported in bits; all entropy-production quantities are reported in nats per step.
+
+\subsection{Finite logic laboratories}
+
+The experiments are carried out in finite Markov laboratories built from a macro-register space \(X\) together with a micro-degeneracy factor \(d\), so that
+\[
+Z = X \times \{1,\dots,d\}.
+\]
+A single tick of the dynamics first applies a deterministic macro-update, then injects controlled output noise, then applies memory flips to designated stable bits, and finally redistributes probability uniformly across the \(d\) microstates of the destination macrostate. This last step enforces rapid within-fiber mixing and makes packaging explicit rather than implicit.
+
+Three gate laboratories are used throughout. The NOT laboratory carries registers \((a,c)\), where \(a\) is a stable input bit and the gate sets \(c' = 1-a\). The AND laboratory carries \((a,b,c)\), where \(a\) and \(b\) are stable input bits and the gate sets \(c' = a \wedge b\). The reversible XOR embedding is implemented as a CNOT laboratory with registers \((a,b)\), where \(a\) is the stable control and the target updates as \(b' = a \oplus b\). Output noise is controlled by \(p_{\mathrm{gate}}\). Stable-input corruption is controlled either directly by \(p_{\mathrm{mem}}\) or indirectly through a barrier parameter via
+\[
+p_{\mathrm{mem}} = \text{base\_mem\_noise}\,e^{-\text{barrier}}.
+\]
+The phase-diagram sweeps vary \(p_{\mathrm{gate}}\), barrier, and \(\tau\). For CNOT, the \(\tau>1\) cases are interpreted as closure stress tests rather than as repeated evaluation of a single-step static truth table.
+
+A fourth laboratory, the parity-sector model, is not a gate laboratory in the same sense. It is a two-bit system \((a,b)\) with controlled leakage between the even-parity and odd-parity sectors. Its purpose is to ask which binary coarse variables remain robust as noise and timescale vary. This is the laboratory used for the parity-versus-random-lens comparison.
+
+\subsection{Discovery pipeline}
+
+The final part of the methods asks whether stable bits and gates can be recovered from transition structure without declaring them by hand. For input-bit discovery we compute the second eigenvector of a reversibilized, symmetrized \(\tau\)-step operator and sweep threshold cuts through that vector to generate binary partitions. Each candidate partition is scored by metastability minus RM, so the preferred candidate is both persistent and closure-friendly. In the NOT and parity laboratories, the best-scoring recovered partitions agree with the intended packaged bits at the level reported later in Section~\ref{sec:results-discovery}.
+
+Output-bit discovery is treated separately in the NOT gate reconstruction. There we first build bidirectional behavioral classes from outgoing rows and incoming columns of the kernel, enumerate binary partitions of those classes, and rank the candidates by future information gain over present redundancy. Intuitively, a good output partition should be informative about future behavior while not simply restating the current input partition. Once input and output partitions are selected, we form a balanced transition sample, infer the best-fit one-input gate, and record its error and conditional entropy. The recovered NOT result reported later in the paper is frozen in \path{results/final_claims/table_gate_discovery.csv} and the underlying source artifacts listed in the claim ledger.
+
+The net effect of this methodology is that every clause of Definition~\ref{def:logic-layer} is tied to an explicit measurement. Stability is probed by \(S_\tau\), closure by RM and closure defect, gate semantics by channel error and entropy, and embodiment by unretained input information and entropy-production audits. The remaining sections simply read those diagnostics off the frozen result bundle for four different empirical questions: which coarse variables are robust, which gates close under stress, what changes under erasure, and whether bits and gates can be discovered rather than imposed.

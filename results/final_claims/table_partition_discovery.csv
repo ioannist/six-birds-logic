@@ -1,0 +1,3 @@
+lab_name,best_agreement,n_candidates,best_score,best_metastability,best_rm,top2_score,top3_score
+not,1,5,0.999983226869,0.999983226869,5.55128452972e-17,0.990028101404,0.970448192821
+parity_sector,1,5,0.95,0.95,1.70002900646e-16,0.722830258117,0.606193002213

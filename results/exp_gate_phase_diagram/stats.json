@@ -1,0 +1,24 @@
+{
+  "anomalies": [],
+  "n_rows": 108,
+  "per_gate": {
+    "and": {
+      "mean_err_induced_pgate_0": 0.022459509677580657,
+      "mean_err_induced_pgate_0.1": 0.11796760774206454,
+      "mean_err_truth_pgate_0": 0.022459509677580657,
+      "mean_err_truth_pgate_0.1": 0.11796760774206454
+    },
+    "cnot": {
+      "mean_err_induced_pgate_0": 0.018397832932943,
+      "mean_err_induced_pgate_0.1": 0.2007254876679958,
+      "mean_err_truth_pgate_0": 0.3333333333333333,
+      "mean_err_truth_pgate_0.1": 0.36666666666666675
+    },
+    "not": {
+      "mean_err_induced_pgate_0": 0.02364324663553814,
+      "mean_err_induced_pgate_0.1": 0.11891459730843051,
+      "mean_err_truth_pgate_0": 0.02364324663553814,
+      "mean_err_truth_pgate_0.1": 0.11891459730843051
+    }
+  }
+}

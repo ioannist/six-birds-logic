@@ -1,0 +1,10 @@
+name = "LogicClosure"
+version = "0.1.0"
+defaultTargets = ["logicclosure"]
+
+[[lean_lib]]
+name = "LogicClosure"
+
+[[lean_exe]]
+name = "logicclosure"
+root = "Main"

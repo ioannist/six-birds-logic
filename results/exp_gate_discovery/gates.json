@@ -1,0 +1,21 @@
+{
+  "not": {
+    "entropy": 0.2797739049244776,
+    "error": 0.04845,
+    "input_partition_score": 0.9998760623911667,
+    "output_current_I": 0.0,
+    "output_delta_I": 0.7136030428840437,
+    "output_future_I": 0.7136030428840437,
+    "sample_size": 20000,
+    "truth_table_bits": [
+      1,
+      0
+    ],
+    "truth_table_matrix_flat": [
+      0,
+      1,
+      1,
+      0
+    ]
+  }
+}

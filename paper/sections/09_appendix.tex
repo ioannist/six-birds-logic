@@ -1,0 +1,25 @@
+\appendix
+\section{Reproducibility, frozen artifacts, and formal support}
+\label{sec:appendix}
+
+This appendix records the support structure behind the main text and nothing more. The goal is to make the paper reproducible without turning the appendix into a second results section. The main manuscript reads only frozen outputs; no scientific quantity is recomputed during drafting.
+
+\subsection{Reproducibility and artifact manifest}
+The repository contains an end-to-end reproduction harness that regenerates the experimental outputs used in the manuscript. The command \texttt{make reproduce-all} rebuilds the six result families used in the paper: the parity-versus-AND sweep, the parity-robustness experiment, the gate-phase bundle, the reversible-versus-erased comparison, the discovery smoke run, and the NOT gate-discovery run. The resulting files are recorded in \path{results/final_manifest.json}, which stores relative paths, file hashes, and sizes for the generated artifacts. This manifest is the repository-level answer to the question ``what exact files underwrite the paper?''
+
+\subsection{Frozen claims bundle}
+The manuscript-level interface to those artifacts is the frozen claims bundle under \path{results/final_claims/}. The file \path{claims.json} stores the headline scalar values cited in the paper, while the CSV files store the figure-ready and table-ready data used to render the parity figure, the phase figure, the reversible-versus-erased comparison table, the partition-discovery summary, and the gate-discovery summary. The paper is written against this bundle rather than against live computations. This is why the numerical claims in Sections~\ref{sec:results-parity}--\ref{sec:results-discovery} can be checked line by line against a fixed artifact set.
+
+\subsection{Code and data availability}
+All code used to generate the laboratories, diagnostics, discovery pipeline, frozen claims, and paper assets is contained in the public repository at \url{https://github.com/ioannist/six-birds-logic}. Core implementations live under \path{src/emergent_logic/}. Experiment entrypoints live under \path{experiments/}, configuration files under \path{configs/}, and reproducibility / validation utilities under \path{scripts/}. Rendered paper assets are generated from \path{results/final_claims/} by \path{scripts/render_paper_assets.py}. No external proprietary dataset is required for the results reported here. The Lean formalization supporting the definability and quotient-dynamics claims lives under \path{lean/LogicClosure/}.
+
+\subsection{Overflow metric notes}
+For compactness, the main text reports only the diagnostics needed to support the paper's central claims. The full frozen phase bundle, however, retains the complete \(108\)-row grid of gate, barrier, horizon, and output-noise conditions in \path{results/final_claims/figure_gate_phase.csv}. Likewise, the parity-robustness asset preserves the full \(12\)-point grid over leakage and horizon in \path{results/final_claims/figure_parity_robustness.csv}. Throughout the repository and manuscript, Shannon quantities such as conditional entropy, mutual information, and unretained input information are reported in bits, whereas entropy-production rates are reported in nats per step.
+
+\section{Brief note on the Lean formalization}
+\label{sec:appendix-lean}
+
+The Lean development is intentionally small and local to the paper's logical core. It formalizes three claims. First, definable predicates---those constant on the fibers of a lens---are closed under conjunction, disjunction, and negation. Second, if a micro-update respects an equivalence relation, then it induces a well-defined map on the corresponding quotient. Third, these quotient-dynamics ideas can be instantiated in a concrete finite example: a parity lens from \(\mathrm{Fin}\ 4\) to \(\mathrm{Fin}\ 2\) together with a parity-respecting update. The formalization is not intended as a mechanized version of the full experimental pipeline. Its role is narrower: it certifies the quotient-and-definability skeleton on which the paper's notion of a logic layer rests.
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}

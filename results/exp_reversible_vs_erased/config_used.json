@@ -1,0 +1,11 @@
+{
+  "exp_name": "exp_reversible_vs_erased",
+  "gate_name": "cnot",
+  "params": {
+    "degeneracy": 3,
+    "p_gate": 0.02,
+    "p_mem": 0.0
+  },
+  "probe_macro_input": 2,
+  "tau": 1
+}

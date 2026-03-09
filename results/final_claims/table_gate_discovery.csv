@@ -1,0 +1,2 @@
+gate_name,truth_table_bits,truth_table_matrix_flat,error,entropy,sample_size,input_partition_score,output_delta_I,output_future_I,output_current_I
+not,"[1,0]","[0,1,1,0]",0.04845,0.279773904924,20000,0.999876062391,0.713603042884,0.713603042884,0

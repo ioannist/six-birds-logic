@@ -1,0 +1,29 @@
+{\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X r r r r@{}}
+\toprule
+\multicolumn{5}{@{}l}{\textit{Closure and audit metrics}} \\
+\midrule
+{View} & {States} & {Defect} & {RM} & {EPR} \\
+\midrule
+CNOT micro & 12 & 0 & 0 & \(2.72\times 10^{-17}\) \\
+CNOT macro & 4 & \(3.47\times 10^{-18}\) & \(1.70\times 10^{-16}\) & 0 \\
+XOR erased macro & 2 & 0.96 & 0.96 & 0 \\
+\bottomrule
+\end{tabularx}
+
+\medskip
+
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}X r r r r r r@{}}
+\toprule
+\multicolumn{7}{@{}l}{\textit{Channel-information metrics}} \\
+\midrule
+{View} & {$H_{\mathrm{in}}$} & {$H_{\mathrm{out}}$} & {\makecell{$H(\mathrm{out}\mid$\\$\mathrm{in})$}} & {\makecell{$I(\mathrm{in};$\\$\mathrm{out})$}} & {$\Delta H$} & {$U_{\text{loss}}$} \\
+\midrule
+CNOT micro & 2 & 2 & 0.141 & 1.859 & 0 & 0.141 \\
+CNOT macro & 2 & 2 & 0.141 & 1.859 & 0 & 0.141 \\
+XOR erased macro & 2 & 1 & 0.141 & 0.859 & 1 & 1.141 \\
+\bottomrule
+\end{tabularx}
+}

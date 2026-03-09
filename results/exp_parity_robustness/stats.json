@@ -1,0 +1,15 @@
+{
+  "n_gridpoints": 12,
+  "representative": {
+    "p_leak=0.05,tau=1": {
+      "rm_median_random": 0.004999999999999977,
+      "rm_parity": 1.1102230246251565e-16
+    },
+    "p_leak=0.2,tau=1": {
+      "rm_median_random": 0.020000000000000018,
+      "rm_parity": 0.0
+    }
+  },
+  "win_rate": 1.0,
+  "wins": 12
+}

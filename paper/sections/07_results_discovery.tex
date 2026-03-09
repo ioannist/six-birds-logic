@@ -1,0 +1,24 @@
+\section{Discovering Bits and Gates}
+\label{sec:results-discovery}
+
+The final empirical step reverses the usual implementation story. Up to this point the paper has taken candidate packaged bits and gate lenses seriously enough to ask whether they close. Here we ask whether those bits and a gate can be recovered from transition structure without naming them in advance. The discovery pipeline does not begin with declared symbols such as ``input bit,'' ``parity,'' or ``NOT.'' It begins with the kernel itself: binary partitions are proposed from spectral structure, scored by metastability minus route mismatch, and only then interpreted as candidate packaged predicates. In the NOT reconstruction, candidate output partitions are ranked by future information gain over present redundancy so that a good output bit predicts the future without merely restating the current input partition. Tables~\ref{tab:partition-discovery} and \ref{tab:gate-discovery} report the frozen outputs of that procedure.
+
+\begin{table}[tbp]
+    \centering
+    \caption{Unsupervised binary partition recovery in the NOT and parity-sector laboratories. The table reports agreement with the intended packaged predicate, candidate-set size, and the top three closure scores. Rendered directly from \protect\path{results/final_claims/table_partition_discovery.csv}.}
+    \label{tab:partition-discovery}
+    \input{tables/partition_discovery.tex}
+\end{table}
+
+Table~\ref{tab:partition-discovery} shows that unsupervised partition recovery succeeds exactly in both benchmark laboratories. In the NOT laboratory, the best recovered partition matches the packaged bit with agreement \(1\) over a candidate set of size \(5\). Its winning score is \(1.000\), with metastability \(1.000\) and RM \(5.55\times 10^{-17}\). The second and third candidate scores, \(0.990\) and \(0.970\), show that the laboratory contains nearby closure-friendly cuts, but the top-ranked partition is the exact packaged distinction. In the parity-sector laboratory, the best recovered partition also has agreement \(1\) with \(5\) candidates considered. Its winning score is \(0.95\), with RM \(1.70\times 10^{-16}\), while the second and third scores fall to \(0.723\) and \(0.606\). The inverse problem is therefore nontrivial but decisive: from transition structure alone, the intended packaged bits emerge as the top-ranked closure variables.
+
+\begin{table}[tbp]
+    \centering
+    \caption{Recovered NOT gate from discovered input and output partitions. The table reports the fitted truth table, fitted error, fitted entropy, sample size, and the discovery scores used to rank the recovered carriers. Rendered directly from \protect\path{results/final_claims/table_gate_discovery.csv}.}
+    \label{tab:gate-discovery}
+    \input{tables/gate_discovery.tex}
+\end{table}
+
+Once the input partition has been found, the NOT reconstruction asks a harder question: which binary partition of behavioral classes is the right output bit? Table~\ref{tab:gate-discovery} records the winning answer. The recovered input partition enters the final gate fit with score \(1.000\). The selected output partition has \(\Delta I_{\mathrm{out}}=0.714\), \(I_{\mathrm{future}}=0.714\), and \(I_{\mathrm{current}}=0\). In other words, the chosen output bit carries future information while not merely duplicating the current input partition. On a balanced sample of 20000 transitions, the induced gate fit yields truth bits \texttt{[1,0]}, equivalently the flattened one-step table \texttt{[0,1,1,0]}. That is precisely the NOT gate. The fitted error is \(0.0485\) and the conditional entropy is \(0.280\). The recovery is therefore not a symbolic relabeling of hand-specified registers; it is an induced operator found only after the carriers on which it closes have themselves been discovered.
+
+Taken together, Tables~\ref{tab:partition-discovery} and \ref{tab:gate-discovery} close the empirical arc of the paper. Earlier sections argued that logic should be diagnosed by stability, closure, and audit rather than assumed from symbolic convenience. The discovery results show that the same diagnostics can also work in reverse: they can first detect which packaged distinctions a substrate supports and then recover the operator induced on them. In that sense, the paper does not merely reinterpret known bits and gates inside the Six Birds vocabulary. It shows that a logic layer can be found from dynamics alone. Section~\ref{sec:discussion} returns to the broader implication: logic is something a layer earns, not something an analyst is entitled to assume.

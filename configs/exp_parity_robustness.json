@@ -1,0 +1,14 @@
+{
+  "exp_name": "exp_parity_robustness",
+  "seed": 0,
+  "gate_name": "parity_sector",
+  "params_base": {
+    "degeneracy": 3
+  },
+  "grid": {
+    "p_leak": [0.02, 0.05, 0.10, 0.20],
+    "tau": [1, 2, 4]
+  },
+  "n_random": 60,
+  "random_mode": "macro_balanced"
+}

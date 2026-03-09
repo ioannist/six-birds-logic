@@ -1,0 +1,29 @@
+{
+  "discovery_not_best_agreement": 1.0,
+  "discovery_parity_best_agreement": 1.0,
+  "not_gate_entropy": 0.2797739049244776,
+  "not_gate_error": 0.04845,
+  "not_gate_sample_size": 20000,
+  "not_gate_truth_table_matrix_flat": [
+    0,
+    1,
+    1,
+    0
+  ],
+  "parity_rep_p005_tau1_rm": 1.1102230246251565e-16,
+  "parity_rep_p020_tau1_rm": 0.0,
+  "parity_win_rate": 1.0,
+  "phase_and_err_truth_p0": 0.022459509677580657,
+  "phase_and_err_truth_p01": 0.11796760774206454,
+  "phase_anomaly_count": 0,
+  "phase_cnot_err_truth_p0": 0.3333333333333333,
+  "phase_cnot_err_truth_p01": 0.36666666666666675,
+  "phase_n_rows": 108,
+  "phase_not_err_truth_p0": 0.02364324663553814,
+  "phase_not_err_truth_p01": 0.11891459730843051,
+  "random_rep_p005_tau1_median_rm": 0.004999999999999977,
+  "random_rep_p020_tau1_median_rm": 0.020000000000000018,
+  "rev_vs_erased_closure_defect_delta": 0.96,
+  "rev_vs_erased_ratio_unretained_input_info": 8.070108626770319,
+  "rev_vs_erased_rm_delta": 0.9599999999999999
+}

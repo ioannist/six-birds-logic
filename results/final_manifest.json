@@ -1,0 +1,98 @@
+{
+  "artifacts": [
+    {
+      "path": "exp_discovery_smoke/not_candidates.csv",
+      "sha256": "f435ff705e58bb2db33055c39e81329fc3fa864acd2ce4d3ad375383dadffb9c",
+      "size_bytes": 569
+    },
+    {
+      "path": "exp_discovery_smoke/parity_sector_candidates.csv",
+      "sha256": "a7ed5d92c3342c7f39c4396d1f3333a53265c6e1dd7e537fb1411bfde5d3d831",
+      "size_bytes": 583
+    },
+    {
+      "path": "exp_discovery_smoke/summary.json",
+      "sha256": "86564937ef59a79f03e5ee4d442d1398323be5f9b6a65178cacd921d039d139e",
+      "size_bytes": 325
+    },
+    {
+      "path": "exp_gate_discovery/config_used.json",
+      "sha256": "35ed7e869fa914b995b264ab352c7b990c518d5eb3b6aba717b3cb5f570b9370",
+      "size_bytes": 244
+    },
+    {
+      "path": "exp_gate_discovery/gates.json",
+      "sha256": "486bd36fb2b7a8b5aefd8c2520d8d1a4f63d0d6ffa34a5f01fcf915d9bd7609c",
+      "size_bytes": 389
+    },
+    {
+      "path": "exp_gate_discovery/not_output_candidates.csv",
+      "sha256": "81937ef475faf3fd77f234f9954b37b1fef4200399e5838b85d68a6b336b8a5a",
+      "size_bytes": 393
+    },
+    {
+      "path": "exp_gate_phase_diagram/config_used.json",
+      "sha256": "efa9cfb27ac7e0afe940593a13bf5c4768bff384b0c4af0eae104640fa6e4b56",
+      "size_bytes": 365
+    },
+    {
+      "path": "exp_gate_phase_diagram/stats.json",
+      "sha256": "4aed9812ee7f0dbbacf2969ec53aaeb7895e766fca5a4ebb93b0b5c61e883f0e",
+      "size_bytes": 775
+    },
+    {
+      "path": "exp_gate_phase_diagram/summary.csv",
+      "sha256": "fb0ba28f0462e55158111b400fbb3df6dc90c0fe52d67d915c56f7f37f64df0a",
+      "size_bytes": 8550
+    },
+    {
+      "path": "exp_parity_robustness/config_used.json",
+      "sha256": "aa6def9e5b573d0619e659a1c5d2c5967dc6113e3f446bb7c8ff6b8b66445b59",
+      "size_bytes": 314
+    },
+    {
+      "path": "exp_parity_robustness/stats.json",
+      "sha256": "e668be2160d5d51b1546bb93e4d64cd2e856e1869dda3a19b9edc90ddd9d6942",
+      "size_bytes": 312
+    },
+    {
+      "path": "exp_parity_robustness/summary.csv",
+      "sha256": "6ad90a3dec524cfa31d8baf43aea5514aaac35fd8b96d053864c55a05a22c76b",
+      "size_bytes": 27073
+    },
+    {
+      "path": "exp_parity_vs_and/config_used.json",
+      "sha256": "d67c5b4dba15933e2e52d13167af4cf3755c3c2c066101dc3290f4fca9a7864e",
+      "size_bytes": 316
+    },
+    {
+      "path": "exp_parity_vs_and/summary.csv",
+      "sha256": "3f11b91b4e118c740fba22d13fc219430a750194e4e80fd18a39a15542e32a6d",
+      "size_bytes": 2472
+    },
+    {
+      "path": "exp_reversible_vs_erased/comparison.csv",
+      "sha256": "8a3a657227b771c481753f49ac1d1bafaa9634ed539e1f368634a6ed5f51ce99",
+      "size_bytes": 389
+    },
+    {
+      "path": "exp_reversible_vs_erased/config_used.json",
+      "sha256": "3fc07f82b712a92ae8b9e71d3f30ac70635810075d6ad7ca2fa8b7db8ed730c0",
+      "size_bytes": 183
+    },
+    {
+      "path": "exp_reversible_vs_erased/stats.json",
+      "sha256": "a2d7ebe9c8c8796ab6e2a087189e8778f0573f216f85b7b1679ec0924db0179f",
+      "size_bytes": 243
+    }
+  ],
+  "experiments": [
+    "exp_parity_vs_and",
+    "exp_parity_robustness",
+    "exp_gate_phase_diagram",
+    "exp_reversible_vs_erased",
+    "exp_discovery_smoke",
+    "exp_gate_discovery"
+  ],
+  "total_artifact_count": 17
+}

@@ -1,0 +1,14 @@
+{
+  "exp_name": "exp_parity_vs_and",
+  "seed": 0,
+  "gates": ["cnot", "and"],
+  "params_base": {
+    "degeneracy": 3,
+    "base_mem_noise": 0.05
+  },
+  "grid": {
+    "p_gate": [0.01, 0.05],
+    "barrier": [6.0, 8.0],
+    "tau": [1, 2, 4]
+  }
+}

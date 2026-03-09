@@ -1,0 +1,4 @@
+view,n_states_view,closure_defect,rm_view,epr_view,H_in,H_out,H_out_given_in,I_in_out,entropy_drop,unretained_input_info
+cnot_micro,12,0,0,2.72004641033e-17,2,2,0.141440542542,1.85855945746,0,0.141440542542
+cnot_macro,4,3.46944695195e-18,1.70002900646e-16,0,2,2,0.141440542542,1.85855945746,0,0.141440542542
+xor_erased_macro,2,0.96,0.96,0,2,1,0.141440542542,0.858559457458,1,1.14144054254
