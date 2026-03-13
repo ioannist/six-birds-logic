@@ -4,9 +4,9 @@ This repository contains the **logic instantiation** for the paper:
 
 > **To XOR a Stone with Six Birds: Closure Diagnostics for Emergent Bits, Gates, and Booleanity**
 >
-> Archived at: https://zenodo.org/records/18919370
+> Archived at: https://zenodo.org/records/19002791
 >
-> DOI: https://doi.org/10.5281/zenodo.18919370
+> DOI: https://doi.org/10.5281/zenodo.19002791
 
 This paper is the logic-focused instantiation of the emergence calculus introduced in *Six Birds: Foundations of Emergence Calculus*. It treats logic as something a substrate can earn at a layer rather than something given in advance, and develops auditable closure diagnostics for when packaged distinctions behave like bits, gates, and Boolean operators under coarse-grained dynamics.
 
