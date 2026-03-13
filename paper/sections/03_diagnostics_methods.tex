@@ -36,7 +36,7 @@ and the route mismatch is the weighted within-fiber discrepancy
 R_\tau^f(i,\cdot)-K_{\tau,f}(x,\cdot)
 \bigr\|_1.
 \]
-RM vanishes when coarse-grained transition behavior is fiberwise consistent. It grows when the lens collapses states whose macro futures differ. In the parity experiment we compare RM across parity, AND, and random binary lenses; in the phase-diagram and reversible-versus-erased experiments we also use stationary weighting to prevent rare states from dominating the metric.
+RM vanishes when coarse-grained transition behavior is fiberwise consistent. It grows when the lens collapses states whose macro futures differ. In the parity experiment we compare RM across parity, AND, and random binary lenses; in the phase-diagram and reversible-versus-erased experiments we also use stationary weighting to prevent rare states from dominating the metric \cite{kemeny1976finite,buchholz1994lumpability,simonando1961aggregation}.
 
 A third closure diagnostic compares two different reduction routes. Given pushforward \(Q_f\) through the lens and a canonical lift \(U_f\) back to a packaged microdescription, the \emph{closure defect}, implemented here as a distribution commutation defect, is
 \[
@@ -48,7 +48,7 @@ Q_f(\mu P^\tau)
 Q_f\!\bigl(U_f(Q_f(\mu))P^\tau\bigr)
 \right\|_1.
 \]
-The first term evolves microscopically and then reduces; the second reduces, repackages, evolves, and reduces again. Small defect means that the packaged description is genuinely closed under the dynamics. Large defect indicates that hidden microstructure or protocol residue is still leaking through the purported logic layer.
+The first term evolves microscopically and then reduces; the second reduces, repackages, evolves, and reduces again. Small defect means that the packaged description is genuinely closed under the dynamics. Large defect indicates that hidden microstructure or protocol residue is still leaking through the purported logic layer \cite{givon2004extracting,shalizi2025macrostate,barnettseth2023dynamical}.
 
 Taken together, \(S_\tau\), RM, and \(\Delta_{\tau,f}\) operationalize the first two clauses of Definition~\ref{def:logic-layer}. Stability measures persistence. RM and closure defect measure whether closure has actually been achieved rather than merely asserted.
 
@@ -106,7 +106,7 @@ This is the primary information-loss proxy in the reversible-versus-erased analy
 \Delta H = H(\mathrm{in}) - H(\mathrm{out}),
 \]
 but the main comparison later in the paper is expressed in terms of \(U_{\text{loss}}\), because reversible embeddings can preserve output entropy while still hiding or discarding part of the input description.
-The reversible-versus-erased comparison in Section~\ref{sec:results-reversible} is framed in the spirit of Landauer's analysis of irreversibility and Bennett's reversible-computation program \cite{landauer1961,bennett1973}.
+The reversible-versus-erased comparison in Section~\ref{sec:results-reversible} is framed by the classical literature on irreversibility, reversible computation, and the thermodynamics of information \cite{landauer1961,bennett1973,bennett1982thermodynamics,parrondo2015thermoinfo}.
 
 Finally, to connect information processing with embodiment, we compute entropy-production rates. For a stationary distribution \(\pi\) of the micro-kernel \(P\), the micro-level entropy production rate is
 \[
@@ -123,7 +123,7 @@ measured in nats per step. The corresponding \emph{apparent} coarse-grained entr
 =
 \sigma(K_{\tau,f}).
 \]
-Micro and apparent EPR coincide on the identity lens and can diverge under coarse-graining. In this paper they serve as audit variables rather than as stand-alone thermodynamic claims. All Shannon quantities are reported in bits; all entropy-production quantities are reported in nats per step.
+Micro and apparent EPR coincide on the identity lens and can diverge under coarse-graining. In this paper they serve as audit variables rather than as stand-alone thermodynamic claims. All Shannon quantities are reported in bits; all entropy-production quantities are reported in nats per step \cite{esposito2012coarsegraining,kawaguchi2013hiddenepr}.
 
 \subsection{Finite logic laboratories}
 
@@ -143,8 +143,8 @@ A fourth laboratory, the parity-sector model, is not a gate laboratory in the sa
 
 \subsection{Discovery pipeline}
 
-The final part of the methods asks whether stable bits and gates can be recovered from transition structure without declaring them by hand. For input-bit discovery we compute the second eigenvector of a reversibilized, symmetrized \(\tau\)-step operator and sweep threshold cuts through that vector to generate binary partitions. Each candidate partition is scored by metastability minus RM, so the preferred candidate is both persistent and closure-friendly. In the NOT and parity laboratories, the best-scoring recovered partitions agree with the intended packaged bits at the level reported later in Section~\ref{sec:results-discovery}.
+The final part of the methods asks whether stable bits and gates can be recovered from transition structure without declaring them by hand. For input-bit discovery we compute the second eigenvector of a reversibilized, symmetrized \(\tau\)-step operator and sweep threshold cuts through that vector to generate binary partitions \cite{deuflhardweber2005pcca,shalizicrutchfield2001compmech}. Each candidate partition is scored by metastability minus RM, so the preferred candidate is both persistent and closure-friendly. In the NOT and parity laboratories, the best-scoring recovered partitions agree with the intended packaged bits at the level reported later in Section~\ref{sec:results-discovery}.
 
-Output-bit discovery is treated separately in the NOT gate reconstruction. There we first build bidirectional behavioral classes from outgoing rows and incoming columns of the kernel, enumerate binary partitions of those classes, and rank the candidates by future information gain over present redundancy. Intuitively, a good output partition should be informative about future behavior while not simply restating the current input partition. Once input and output partitions are selected, we form a balanced transition sample, infer the best-fit one-input gate, and record its error and conditional entropy. The recovered NOT result reported later in the paper is frozen in \path{results/final_claims/table_gate_discovery.csv} and the underlying source artifacts listed in the claim ledger.
+Output-bit discovery is treated separately in the NOT gate reconstruction. There we first build bidirectional behavioral classes from outgoing rows and incoming columns of the kernel, enumerate binary partitions of those classes, and rank the candidates by future information gain over present redundancy \cite{bialek2001predictability,crutchfieldyoung1989statcomplex,barnettseth2023dynamical}. Intuitively, a good output partition should be informative about future behavior while not simply restating the current input partition. Once input and output partitions are selected, we form a balanced transition sample, infer the best-fit one-input gate, and record its error and conditional entropy. The recovered NOT result reported later in the paper is frozen in \path{results/final_claims/table_gate_discovery.csv} and the underlying source artifacts listed in the claim ledger.
 
 The net effect of this methodology is that every clause of Definition~\ref{def:logic-layer} is tied to an explicit measurement. Stability is probed by \(S_\tau\), closure by RM and closure defect, gate semantics by channel error and entropy, and embodiment by unretained input information and entropy-production audits. The remaining sections simply read those diagnostics off the frozen result bundle for four different empirical questions: which coarse variables are robust, which gates close under stress, what changes under erasure, and whether bits and gates can be discovered rather than imposed.

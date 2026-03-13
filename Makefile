@@ -1,4 +1,4 @@
-.PHONY: test run-smoke lint reproduce-all seal paper-assets paper paper-clean
+.PHONY: test run-smoke lint reproduce-all seal paper-assets paper paper-clean paper-flatten
 
 test:
 	PYTHONPATH=src python -m pytest -q
@@ -30,6 +30,16 @@ paper: paper-assets
 		cd paper && pdflatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build main.tex; \
 		cd paper && pdflatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build main.tex; \
 		cd paper && pdflatex -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build main.tex; \
+	fi
+	$(MAKE) paper-flatten
+
+paper-flatten:
+	mkdir -p paper/build
+	@if command -v latexpand >/dev/null 2>&1; then \
+		cd paper && latexpand -o build/main_flat.tex main.tex; \
+	else \
+		echo "latexpand not found; cannot write paper/build/main_flat.tex" >&2; \
+		exit 1; \
 	fi
 
 paper-clean:

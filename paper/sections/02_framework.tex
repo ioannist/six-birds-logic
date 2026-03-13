@@ -13,7 +13,7 @@ be a lens or coarse-graining map into a smaller label space \(X\). The fibers of
 \[
 h = \tilde h \circ f.
 \]
-We write \(\Sigma_f\) for the family of events or predicates definable from \(f\). \(\Sigma_f\) is the expressive content of the layer: if a distinction is not definable there, then it is not available as a logical statement at that layer.
+We write \(\Sigma_f\) for the family of events or predicates definable from \(f\). \(\Sigma_f\) is the expressive content of the layer: if a distinction is not definable there, then it is not available as a logical statement at that layer \cite{pawlak1982rough,ellerman2010partitions,shalizi2025macrostate}.
 
 Packaging is the step that turns a mere definable distinction into a reusable symbol carrier. In the binary case, a package is a map
 \[
@@ -23,7 +23,7 @@ with many microstates assigned to the same label because they are treated as equ
 \[
 \Pi_A(z) = \mathbf{1}[z \in A].
 \]
-This is the point at which P5 becomes indispensable: truth values are not primitive objects but compressed labels of microstates. They remain meaningful only when P4 supplies enough staging, metastability, or sector structure for those labels to persist across the timescale on which the layer is supposed to operate.
+This is the point at which P5 becomes indispensable: truth values are not primitive objects but compressed labels of microstates. They remain meaningful only when P4 supplies enough staging, metastability, or sector structure for those labels to persist across the timescale on which the layer is supposed to operate \cite{simonando1961aggregation,deuflhardweber2005pcca,shalizi2025macrostate}.
 
 \subsection{Two complementary views of logic}
 
@@ -48,7 +48,7 @@ At the level of distributions, if \(Q_f\) denotes pushforward through the lens a
 E_{\tau,f}(\mu) = U_f\!\bigl(Q_f(\mu P^\tau)\bigr).
 \]
 This is the reduce--evolve--repackage route.
-In finite-state language, the same descent problem is the one studied by lumpability theory for Markov chains \cite{buchholz1994lumpability}.
+In finite-state language, the same descent problem is the one studied by lumpability theory for Markov chains \cite{kemeny1976finite,buchholz1994lumpability,simonando1961aggregation,givon2004extracting}.
 A genuine macro law requires it to agree, up to a controlled defect, with the route that reasons directly at the packaged level. P1 enters here because effective operators sometimes need to be rewritten or promoted to close cleanly. P3 enters here because route mismatch is precisely the sign that ordering, hidden protocol state, or evaluation schedule is still leaking through the coarse description.
 
 The two views are inseparable in practice. Feasibility without operator closure gives semantics that cannot be executed. Operator closure without feasibility semantics gives a convenient signal-processing description but not yet a logic. A logic layer appears only when the same packaged distinctions support both views at once.
@@ -78,6 +78,6 @@ Figure~\ref{fig:logic-layer-overview} summarizes the architecture of the notion 
 
 Definition~\ref{def:logic-layer} is intentionally stricter than merely being able to label states by zero and one. A candidate bit must remain stable long enough to matter, must support a descended operator calculus, and must survive audit. This is why the six primitives are complementary rather than redundant. P5 packages the carrier; P4 keeps it from dissolving immediately; P2 makes it semantically meaningful; P1 determines whether an effective operator vocabulary can be stabilized; P3 detects route dependence and protocol residue; P6 determines what must be paid to maintain the whole arrangement.
 
-The criterion is also intentionally broader than classical Booleanity. Complement and negation appear naturally when the relevant complements remain definable and stable at the lens. But nothing in Definition~\ref{def:logic-layer} forces every layer to have those complements available at low cost. For that reason we speak of a \emph{logic layer} rather than a \emph{Boolean layer}. The finite laboratories studied in this paper are classical-looking enough to realize NOT, AND, and XOR cleanly, but the framework itself is meant to diagnose which closures a layer actually supports rather than to decree them in advance.
+The criterion is also intentionally broader than classical Booleanity. Complement and negation appear naturally when the relevant complements remain definable and stable at the lens. But nothing in Definition~\ref{def:logic-layer} forces every layer to have those complements available at low cost. For that reason we speak of a \emph{logic layer} rather than a \emph{Boolean layer}. The finite laboratories studied in this paper are classical-looking enough to realize NOT, AND, and XOR cleanly, but the framework itself is meant to diagnose which closures a layer actually supports rather than to decree them in advance \cite{birkhoff1936quantumlogic,ellerman2010partitions,atmanspacher2015nonboolean}.
 
 This perspective clarifies what the rest of the paper will measure. Section~\ref{sec:diagnostics-methods} turns the four clauses of Definition~\ref{def:logic-layer} into concrete observables: predicate stability measures the first clause, route mismatch and closure defect probe the second, feasible-set and gate semantics ground the third, and unretained input information and entropy-production proxies support the fourth. The results sections then use those diagnostics to show that parity is unusually robust as a packaged distinction, that familiar gates occupy different closure regimes, and that reversible embedding and erased output are distinct logical objects rather than notational variants.
