@@ -1,0 +1,176 @@
+{
+  "title": "To XOR a Stone with Six Birds: Closure Diagnostics for Emergent Bits, Gates, and Booleanity",
+  "description": "<p>When does a physical or stochastic system deserve to be described in terms of bits and logic gates? We treat logic not as a starting point but as something a coarse-grained description has to earn. Working in the Six Birds emergence calculus, we call a description a <em>logic layer</em> when it is an audited closure of packaged predicates under induced dynamics: its binary labels persist, the underlying dynamics descends to update rules on those labels, and what the description gets wrong or leaves out is measured explicitly. We turn this definition into a set of diagnostics (predicate stability, route mismatch, closure defect, channel error and entropy, unretained input information, and entropy-production audits) and apply them to finite Markov laboratories in which NOT, AND, and reversible XOR (CNOT) gates run under controlled noise, metastability, and coarse-graining.</p>\n<p>Four results follow. First, in a laboratory with leaky parity sectors, the parity bit is an exactly closed coarse variable, with route mismatch zero at every leakage rate and horizon, whereas the other balanced binary partitions and the AND predicate have strictly positive mismatch at every tested leakage rate and horizon; closed-form expressions give the size of the gap. Second, the three gates fail in different ways: NOT and AND lose closure when their stored inputs drift, whereas a noiseless one-step CNOT is a perfect input&ndash;output channel even though its output bit, read alone, is maximally unclosed. Third, reading the same CNOT laboratory through its XOR output instead of its full register raises the input information left unaccounted for by the output from h<sub>2</sub>(0.02) &asymp; 0.141 bits to 1 + h<sub>2</sub>(0.02) bits, a factor of 8.07 that rational bounds certify to exceed eight, and raises route mismatch from 0 to 0.96. Fourth, a simple unsupervised pipeline recovers the intended stable bits from transition structure alone and reconstructs a NOT gate in declared label coordinates.</p>\n<p>The predicate and quotient facts on which the framework rests are formalized in Lean 4, and the main experimental quantities are re-derived independently in closed form, with their probabilities and route mismatches checked in exact rational arithmetic. The result is a falsifiable, layer-relative criterion for when a system has logic, and for which logic it has.</p>\n<p>Code, data, and the Lean formalization: <a href=\"https://github.com/ioannist/six-birds-logic\">https://github.com/ioannist/six-birds-logic</a></p>",
+  "publication_date": "2026-10-03",
+  "version": "Preprint v3.0",
+  "keywords": [
+    "emergence calculus",
+    "Six Birds Theory",
+    "emergent logic",
+    "Boolean logic",
+    "emergent computation",
+    "coarse-graining",
+    "lumpability",
+    "closure diagnostics",
+    "route mismatch",
+    "parity and XOR",
+    "reversible computation",
+    "information loss",
+    "Markov chains",
+    "conditional entropy",
+    "Lean 4"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.48550/arXiv.2602.00134",
+      "relation": "cites",
+      "resource_type": "publication-preprint",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.18402004",
+      "relation": "cites",
+      "resource_type": "publication-preprint",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.20944/preprints202602.1699.v1",
+      "relation": "cites",
+      "resource_type": "publication-preprint",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.18608833",
+      "relation": "cites",
+      "resource_type": "publication-preprint",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1147/rd.53.0183",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1147/rd.176.0525",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.2307/3215235",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.48550/arXiv.1510.03325",
+      "relation": "cites",
+      "resource_type": "publication-preprint",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "978-0-387-90192-3",
+      "relation": "cites",
+      "resource_type": "publication-book",
+      "scheme": "isbn"
+    },
+    {
+      "identifier": "10.2307/1909285",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1088/0951-7715/17/6/R01",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1007/BF01001956",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1017/S1755020310000018",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1007/s10701-024-00814-1",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1016/j.laa.2004.10.026",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1103/PhysRevLett.63.105",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1023/A:1010388907793",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1162/089976601753195969",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1103/PhysRevE.108.014304",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1007/BF01857727",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1007/BF02084158",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1038/nphys3230",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1103/PhysRevE.85.041125",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.1103/PhysRevE.88.022147",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.2307/1968621",
+      "relation": "cites",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    }
+  ],
+  "notes": "Version 3 (October 3, 2026) follows a mathematical review of the code, the Lean development, and the manuscript; the four main conclusions are unchanged. It adds exact closed forms and rational certificates, extends the Lean formalization, corrects the micro-readout entropies and the discovery candidate counts, and rewrites the exposition. See the version-history appendix of the paper."
+}

@@ -1,0 +1,17 @@
+{
+  "action": "created new-version draft",
+  "concept_record_id": "18919369",
+  "dashboard_url": "https://zenodo.org/uploads/23118421",
+  "doi": "10.5281/zenodo.23118421",
+  "doi_reservation": {
+    "client": "datacite",
+    "identifier": "10.5281/zenodo.23118421",
+    "provider": "datacite",
+    "verified_via": "rdm_pid_table"
+  },
+  "draft_id": 23118421,
+  "recorded_at": "2026-10-03T09:09:33+00:00",
+  "source_doi": "10.5281/zenodo.19002791",
+  "source_record_id": 19002791,
+  "source_title": "To XOR a Stone with Six Birds: Closure Diagnostics for Emergent Bits, Gates, and Booleanity"
+}
