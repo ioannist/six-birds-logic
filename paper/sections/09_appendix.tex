@@ -1,25 +1,75 @@
 \appendix
-\section{Reproducibility, frozen artifacts, and formal support}
+\section{Reproducibility and artifacts}
 \label{sec:appendix}
 
-This appendix records the support structure behind the main text and nothing more. The goal is to make the paper reproducible without turning the appendix into a second results section. The main manuscript reads only frozen outputs; no scientific quantity is recomputed during drafting.
+\paragraph{Reproduction.}
+The repository regenerates every experimental output used in the paper. The command \texttt{make reproduce-all} reruns the six experiment families: the parity-robustness experiment, the gate phase diagram, the reversible-versus-erased comparison, the partition-discovery run, the NOT gate-discovery run, and a supplementary parity-versus-AND sweep over CNOT and AND laboratories that is not discussed in the main text. The command \texttt{make seal} additionally runs the test suite, freezes the headline claims, validates the frozen state, and runs the independent mathematical audit and the Lean axiom audit described in Appendix~\ref{sec:appendix-lean}. The generated files are listed in \path{results/final_manifest.json} with their hashes and sizes.
 
-\subsection{Reproducibility and artifact manifest}
-The repository contains an end-to-end reproduction harness that regenerates the experimental outputs used in the manuscript. The command \texttt{make reproduce-all} rebuilds the six result families used in the paper: the parity-versus-AND sweep, the parity-robustness experiment, the gate-phase bundle, the reversible-versus-erased comparison, the discovery smoke run, and the NOT gate-discovery run. The resulting files are recorded in \path{results/final_manifest.json}, which stores relative paths, file hashes, and sizes for the generated artifacts. This manifest is the repository-level answer to the question ``what exact files underwrite the paper?''
+\paragraph{Frozen claims.}
+The paper is written against a frozen bundle under \path{results/final_claims/}. The file \path{claims.json} holds the headline scalars, and CSV files hold the data behind each figure and table. Figures and tables are rendered from this bundle, and from the gate-discovery source record for the exact channel values in Table~\ref{tab:gate-discovery}, by \path{scripts/render_paper_assets.py}. A validator checks the hashes and sizes of all source artifacts, rebuilds the entire frozen numerical interface from them in isolation, applies the independent mathematical audit, and checks the headline results directly: the parity win at every grid point, exact partition recovery, and the eightfold loss ratio. The test suite confirms that the validator rejects both a modified source artifact and a forged claim.
 
-\subsection{Frozen claims bundle}
-The manuscript-level interface to those artifacts is the frozen claims bundle under \path{results/final_claims/}. The file \path{claims.json} stores the headline scalar values cited in the paper, while the CSV files store the figure-ready and table-ready data used to render the parity figure, the phase figure, the reversible-versus-erased comparison table, the partition-discovery summary, and the gate-discovery summary. The paper is written against this bundle rather than against live computations. This is why the numerical claims in Sections~\ref{sec:results-parity}--\ref{sec:results-discovery} can be checked line by line against a fixed artifact set.
+\paragraph{Code and data availability.}
+All code for the laboratories, diagnostics, discovery pipeline, frozen claims, and paper assets is in the public repository \url{https://github.com/ioannist/six-birds-logic}. Core implementations are under \path{src/emergent_logic/}, experiment entry points under \path{experiments/}, configurations under \path{configs/}, and reproduction and validation scripts under \path{scripts/}. The Lean formalization is under \path{lean/LogicClosure/}, and the mathematical review that accompanies the code is \path{docs/mathematical_review.txt}. No external or proprietary data are used. Shannon quantities are in bits; entropy-production rates are in nats per step, or per evaluation window of \(\tau\) steps for apparent rates.
 
-\subsection{Code and data availability}
-All code used to generate the laboratories, diagnostics, discovery pipeline, frozen claims, and paper assets is contained in the public repository at \url{https://github.com/ioannist/six-birds-logic}. Core implementations live under \path{src/emergent_logic/}. Experiment entrypoints live under \path{experiments/}, configuration files under \path{configs/}, and reproducibility / validation utilities under \path{scripts/}. Rendered paper assets are generated from \path{results/final_claims/} by \path{scripts/render_paper_assets.py}. No external proprietary dataset is required for the results reported here. The Lean formalization supporting the definability and quotient-dynamics claims lives under \path{lean/LogicClosure/}.
-
-\subsection{Overflow metric notes}
-For compactness, the main text reports only the diagnostics needed to support the paper's central claims. The full frozen phase bundle, however, retains the complete \(108\)-row grid of gate, barrier, horizon, and output-noise conditions in \path{results/final_claims/figure_gate_phase.csv}. Likewise, the parity-robustness asset preserves the full \(12\)-point grid over leakage and horizon in \path{results/final_claims/figure_parity_robustness.csv}. Throughout the repository and manuscript, Shannon quantities such as conditional entropy, mutual information, and unretained input information are reported in bits, whereas entropy-production rates are reported in nats per step.
-
-\section{Brief note on the Lean formalization}
+\section{Formal and exact support}
 \label{sec:appendix-lean}
 
-The Lean development is intentionally small and local to the paper's logical core. It formalizes three claims. First, definable predicates---those constant on the fibers of a lens---are closed under conjunction, disjunction, and negation. Second, if a micro-update respects an equivalence relation, then it induces a well-defined map on the corresponding quotient. Third, these quotient-dynamics ideas can be instantiated in a concrete finite example: a parity lens from \(\mathrm{Fin}\ 4\) to \(\mathrm{Fin}\ 2\) together with a parity-respecting update. The formalization is not intended as a mechanized version of the full experimental pipeline. Its role is narrower: it certifies the quotient-and-definability skeleton on which the paper's notion of a logic layer rests.
+The paper's claims rest on three kinds of support: theorems proved in Lean, closed-form results checked in exact rational arithmetic, and floating-point computation. This appendix states which claims rest on which.
+
+\subsection{Lean formalization}
+
+The Lean~4 development (toolchain 4.28.0) formalizes the exact predicate and quotient core of Section~\ref{sec:framework}. It concerns sets, predicates, and deterministic updates; it does not formalize the stochastic laboratories, the floating-point experiments, or any inference from definability to metastability. Table~\ref{tab:lean} summarizes its contents. An audit script builds the project and inspects the transitive axioms of all \(32\) named theorems, including a trivial build check. Only Lean's standard foundations \texttt{propext}, \texttt{Quot.sound}, and \texttt{Classical.choice} occur; there are no local axioms and no \texttt{sorry} or \texttt{admit}. Classical choice enters through the Boolean-valued factorization, whose extension of a macro-predicate off the image of the lens uses classical decidability; it is not an algorithm for arbitrary infinite spaces.
+
+\begin{table}[h]
+    \centering
+    \caption{Contents of the Lean formalization.}
+    \label{tab:lean}
+    {\small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabularx}{\linewidth}{@{}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Module & What is proved \\
+    \midrule
+    Definability & A predicate factors through a lens if and only if it is constant on fibers, with no surjectivity or inhabitation assumptions, in both proposition-valued and Boolean-valued forms; definable predicates contain true and false and are closed under conjunction, disjunction, negation, and exclusive or; definability is preserved by pullback along an update that descends to the labels. \\
+    Quotient dynamics & An update descends to a quotient if and only if it respects the equivalence relation; the induced map is unique and compatible with composition. \\
+    Finite parity example & The parity relation on \(\mathrm{Fin}\,4\) is exactly the kernel of the parity lens \(\mathrm{Fin}\,4\to\mathrm{Fin}\,2\); the lens is onto; collapsing each state to a parity representative preserves the lens and induces the identity update on the quotient. \\
+    Gate examples & The noise-free NOT, AND, and CNOT register updates descend to their stored inputs; CNOT is an involution and injective; the one-step CNOT update admits no induced map on the target bit alone, while two ticks do descend to it; the NOT output bit alone does not descend on the whole state space. \\
+    \bottomrule
+    \end{tabularx}
+    }
+\end{table}
+
+\subsection{Exact numerical certificates}
+
+An independent audit script re-derives the main experimental quantities without importing the pipeline's stationary solver or gate-channel code, and compares them with the frozen values.
+
+\paragraph{Parity laboratory.} For all twelve grid points, exact rational arithmetic enumerates the six balanced labelings and evaluates RM for each. It confirms that parity has RM exactly \(0\), that the exhaustive median equals the closed form of Proposition~\ref{prop:parity-exact}, and that the sampled median exceeds the parity value at every point. The supplementary parity-versus-AND sweep is checked in the same way at all \(24\) of its conditions, including worst-case closure defects for the full register and parity lenses.
+
+\paragraph{Phase diagram.} Every metric in all \(108\) conditions is compared with the channel formulas of Section~\ref{sec:results-phase}, and every RM value is recomputed from rational macro-kernels and explicitly constructed stationary laws. The grid is checked for completeness and for duplicate conditions. The memory noise \(0.05\,e^{-\mathrm{barrier}}\) is irrational at the nonzero grid barriers; the exact checks use each parameter's recorded decimal value and compare with the floating-point outputs to a stated tolerance.
+
+\paragraph{Reversible versus erased.} The erased output has RM exactly \(24/25\). The loss ratio \((1+h)/h\) with \(h=h_2(1/50)\) exceeds eight if and only if \(h<1/7\). For \(1\le q\le2\), let \(t=(q-1)/(q+1)\); then
+\[
+\ln q=2\sum_{k\ge0}\frac{t^{2k+1}}{2k+1},
+\]
+and after \(N\) terms the remaining tail is nonnegative, strictly positive when \(q>1\), and at most \(2t^{2N+1}/\bigl((2N+1)(1-t^2)\bigr)\). Applying these bounds to \(q=2\), \(32/25\), and \(49/25\), and using \(\ln(1/50)=\ln(32/25)-6\ln 2\) and \(\ln(49/50)=\ln(49/25)-\ln 2\), encloses \(h_2(1/50)\) in a rational interval that lies below \(1/7\). The resulting rational enclosure of the ratio is \([8.07010862677,\ 8.070108626771]\).
+
+\paragraph{What remains floating-point.} Shannon quantities other than those above, the barrier exponentials, the spectral eigenvectors of the discovery pipeline, and all sampled statistics are floating-point computations. Values that are exactly zero in rational arithmetic appear in the frozen bundle as residues below \(10^{-14}\); the paper reports them as zero and says so where they appear.
+
+\section{Version history}
+\label{sec:appendix-versions}
+
+\paragraph{Version 1 (March 9, 2026).} Initial release.
+
+\paragraph{Version 2 (October 3, 2026).} This version follows a mathematical review of the code, the Lean development, and the manuscript. The four main conclusions are unchanged. The substantive changes are:
+\begin{enumerate}
+    \item The route-mismatch formula now states the normalization by fiber mass that the code always used, and its relation to lumpability on the positively weighted support. Reported RM values are unchanged.
+    \item The closure-defect discussion adds Lemma~\ref{lem:worst-case-defect} on the worst case over all probes, and confirms that the probe used for the erased CNOT view attains it.
+    \item In the reversible-versus-erased comparison, the micro row previously used the four-state output lens and duplicated the retained register. It now reads the full microstate, which gives \(H_{\mathrm{out}}=3.585\), \(H(\mathrm{out}\mid\mathrm{in})=1.726\), and \(\Delta H=-1.585\) bits. Its mutual and unretained input information, and the eightfold ratio, are unchanged.
+    \item The spectral discovery pipeline now cuts the eigenfunction \(D^{-1/2}v\) in micro coordinates and groups numerically equal coordinates before forming thresholds. Both laboratories now yield three candidate cuts instead of five, and the runner-up scores changed; the winning partitions and their exact agreement are unchanged. The gate-discovery record adds the exact induced channel and raw counts, and the label-orientation convention that distinguishes NOT from COPY is stated.
+    \item Entropy production is computed in pair-flux form, coarse rates use the pushforward of the same stationary law, and apparent rates are reported per evaluation window. Reported values are unchanged up to floating-point residue.
+    \item Closed forms for the parity laboratory (Proposition~\ref{prop:parity-exact}) and the gate channels were added, together with exact rational audits and a rational certificate for the eightfold ratio. The Lean development was extended from three claims to the converse and bridge theorems of Table~\ref{tab:lean}.
+    \item The text distinguishes semantic complement from executable negation, describes \(E_{\tau,f}\) as evolve, reduce, and lift, and states the operational status of Definition~\ref{def:logic-layer}. The abstract and exposition were rewritten for readability, the parity and phase figures were redrawn, and Figure~\ref{fig:information-budget} is new.
+\end{enumerate}
 
 \bibliographystyle{unsrtnat}
 \bibliography{refs}

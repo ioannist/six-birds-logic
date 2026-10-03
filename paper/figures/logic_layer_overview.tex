@@ -33,7 +33,7 @@
 messy substrate detail
 };
 
-\node[box=3.5cm, right=16mm of micro] (packaged) {
+\node[box=4.4cm, right=16mm of micro] (packaged) {
 \textbf{P5 packaged predicates / bits}\\[2pt]
 \(h=\tilde h \circ f\)\\
 \(\Pi_A(z)=\mathbf{1}[z\in A]\)\\[2pt]
@@ -42,27 +42,28 @@ messy substrate detail
 
 \node[note, above=2mm of packaged] (p4note) {P4 staging / sectors\\keep carriers stable};
 
-\node[box=3.4cm, right=18mm of packaged] (audit) {
+\node[box=4.0cm, right=18mm of packaged] (audit) {
 \textbf{P6 audit / closure checks}\\[2pt]
 stability \(S_\tau\)\\
 route mismatch RM\\
-defect \(\Delta_{\tau,f}\)\\
+closure defect \(\Delta_{\tau,f}\)\\
 loss \(U_{\text{loss}}\)\\
 apparent EPR \(\sigma_{\mathrm{app}}\)
 };
 
-\node[box=3.9cm, above=9mm of audit] (feasibility) {
+\node[box=5.6cm, above=9mm of audit] (feasibility) {
 \textbf{P2 feasibility semantics}\\[2pt]
 \(A\wedge B=A\cap B\)\\
 \(A\vee B=A\cup B\)\\
 \(\neg A=Z\setminus A\)\\
-\(A\oplus B=A\triangle B\)
+\(A\oplus B=A\triangle B\)\\[2pt]
+(a Boolean algebra \(\Sigma_f\))
 };
 
-\node[box=3.9cm, below=9mm of audit] (operators) {
+\node[box=5.6cm, below=9mm of audit] (operators) {
 \textbf{P1 induced operators}\\[2pt]
-\(\Pi(F(z)) \approx g(\Pi(z))\)\\
-\(E_{\tau,f}(\mu)=U_f(Q_f(\mu P^\tau))\)
+descent: \(\Pi(F(z)) = g(\Pi(z))\)\\
+lumping: \(Q_f(\mu P^\tau)=Q_f(\mu)\,K_{\tau,f}\)
 };
 
 \node[note, below left=2mm and -5mm of feasibility.south east, anchor=north west] (p3note) {P3 route agreement\\must be checked};
