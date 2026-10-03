@@ -22,3 +22,13 @@ paper/**/*.blg
 *_snapshot.zip
 *_snapshot_v*.zip
 .package-repo-snapshot-version
+
+# Credentials and local secrets (never commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+.netrc
