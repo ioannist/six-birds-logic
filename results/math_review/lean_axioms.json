@@ -1,0 +1,67 @@
+{
+  "axioms": {
+    "LogicClosure.andUpdate_input_respects": [],
+    "LogicClosure.boolDefinable_iff_fiberConstant": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "LogicClosure.cnotUpdate_injective": [],
+    "LogicClosure.cnotUpdate_involutive": [],
+    "LogicClosure.cnotUpdate_target_no_macroMap": [],
+    "LogicClosure.cnotUpdate_target_not_respects": [],
+    "LogicClosure.cnotUpdate_two_ticks_respects": [],
+    "LogicClosure.collapseToParityRep_preserves_lens": [
+      "propext"
+    ],
+    "LogicClosure.collapseToParityRep_respects": [
+      "propext"
+    ],
+    "LogicClosure.definable_and": [],
+    "LogicClosure.definable_false": [],
+    "LogicClosure.definable_iff_fiberConstant": [
+      "propext",
+      "Quot.sound"
+    ],
+    "LogicClosure.definable_isFalse": [],
+    "LogicClosure.definable_isTrue": [],
+    "LogicClosure.definable_not": [],
+    "LogicClosure.definable_or": [],
+    "LogicClosure.definable_preimage": [
+      "Quot.sound"
+    ],
+    "LogicClosure.definable_true": [],
+    "LogicClosure.definable_xor": [],
+    "LogicClosure.flipSecond_respects": [],
+    "LogicClosure.helloTrue": [],
+    "LogicClosure.inducedMap_comp": [
+      "Quot.sound"
+    ],
+    "LogicClosure.inducedMap_mk": [
+      "Quot.sound"
+    ],
+    "LogicClosure.inducedMap_sound": [
+      "Quot.sound"
+    ],
+    "LogicClosure.inducedMap_unique": [
+      "Quot.sound"
+    ],
+    "LogicClosure.notUpdate_input_respects": [],
+    "LogicClosure.notUpdate_output_not_respects": [],
+    "LogicClosure.parityInduced_eq_id": [
+      "propext",
+      "Quot.sound"
+    ],
+    "LogicClosure.parityLens_surjective": [
+      "propext"
+    ],
+    "LogicClosure.paritySetoid_iff_lens_eq": [],
+    "LogicClosure.respects_comp": [],
+    "LogicClosure.respects_iff_exists_quotientMap": [
+      "propext",
+      "Quot.sound"
+    ]
+  },
+  "named_theorems": 32,
+  "toolchain": "leanprover/lean4:v4.28.0"
+}

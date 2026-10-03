@@ -1,0 +1,76 @@
+{
+  "discovery": {
+    "empirical_gate_error": 0.04845,
+    "exact_gate_entropy": 0.28639695711595625,
+    "exact_gate_error": 0.05,
+    "label_gauge": "Both partitions label state 0 as 0; swapping one partition exchanges COPY and NOT.",
+    "partition_agreement": 1.0
+  },
+  "parity": {
+    "p=1/10,tau=1": {
+      "exact_exhaustive_median_rm": "1/100",
+      "exact_parity_rm": "0"
+    },
+    "p=1/10,tau=2": {
+      "exact_exhaustive_median_rm": "1/125",
+      "exact_parity_rm": "0"
+    },
+    "p=1/10,tau=4": {
+      "exact_exhaustive_median_rm": "16/3125",
+      "exact_parity_rm": "0"
+    },
+    "p=1/20,tau=1": {
+      "exact_exhaustive_median_rm": "1/200",
+      "exact_parity_rm": "0"
+    },
+    "p=1/20,tau=2": {
+      "exact_exhaustive_median_rm": "9/2000",
+      "exact_parity_rm": "0"
+    },
+    "p=1/20,tau=4": {
+      "exact_exhaustive_median_rm": "729/200000",
+      "exact_parity_rm": "0"
+    },
+    "p=1/5,tau=1": {
+      "exact_exhaustive_median_rm": "1/50",
+      "exact_parity_rm": "0"
+    },
+    "p=1/5,tau=2": {
+      "exact_exhaustive_median_rm": "3/250",
+      "exact_parity_rm": "0"
+    },
+    "p=1/5,tau=4": {
+      "exact_exhaustive_median_rm": "27/6250",
+      "exact_parity_rm": "0"
+    },
+    "p=1/50,tau=1": {
+      "exact_exhaustive_median_rm": "1/500",
+      "exact_parity_rm": "0"
+    },
+    "p=1/50,tau=2": {
+      "exact_exhaustive_median_rm": "6/3125",
+      "exact_parity_rm": "0"
+    },
+    "p=1/50,tau=4": {
+      "exact_exhaustive_median_rm": "3456/1953125",
+      "exact_parity_rm": "0"
+    }
+  },
+  "phase": {
+    "analytic_channel_checks": 108,
+    "complete_grid_rows": 108,
+    "rational_stationary_RM_checks": 108
+  },
+  "reversible": {
+    "analytic_loss_ratio": 8.070108626770313,
+    "erased_RM": "24/25",
+    "ratio_certificate": {
+      "eightfold_inequality_certified": true,
+      "exact_rational_ratio_lower": "807010862677/100000000000",
+      "exact_rational_ratio_upper": "8070108626771/1000000000000"
+    }
+  },
+  "sweep": {
+    "rationally_checked_rows": 24
+  }
+}

@@ -23,6 +23,43 @@ theorem inducedMap_mk
     inducedMap r F hF (Quotient.mk r a) = Quotient.mk r (F a) := by
   rfl
 
+-- Conversely, a commuting quotient update forces representative consistency.
+theorem respects_iff_exists_quotientMap
+    {α : Type _} (r : Setoid α) (F : α → α) :
+    Respects r F ↔ ∃ g : Quotient r → Quotient r,
+      ∀ a, g (Quotient.mk r a) = Quotient.mk r (F a) := by
+  constructor
+  · intro hF
+    exact ⟨inducedMap r F hF, inducedMap_mk r F hF⟩
+  · rintro ⟨g, hg⟩ a b hab
+    apply Quotient.exact
+    rw [← hg a, ← hg b]
+    exact congrArg g (Quotient.sound hab)
+
+theorem inducedMap_unique
+    {α : Type _} {r : Setoid α} {F : α → α} (hF : Respects r F)
+    {g : Quotient r → Quotient r}
+    (hg : ∀ a, g (Quotient.mk r a) = Quotient.mk r (F a)) :
+    g = inducedMap r F hF := by
+  funext q
+  induction q using Quotient.ind with
+  | _ a => exact hg a
+
+theorem respects_comp
+    {α : Type _} {r : Setoid α} {F G : α → α}
+    (hF : Respects r F) (hG : Respects r G) : Respects r (G ∘ F) := by
+  intro a b hab
+  exact hG (hF hab)
+
+theorem inducedMap_comp
+    {α : Type _} {r : Setoid α} {F G : α → α}
+    (hF : Respects r F) (hG : Respects r G) :
+    inducedMap r (G ∘ F) (respects_comp hF hG) =
+      inducedMap r G hG ∘ inducedMap r F hF := by
+  funext q
+  induction q using Quotient.ind with
+  | _ a => rfl
+
 section Examples
 
 def kernelSetoid {α β : Type _} (f : α → β) : Setoid α where

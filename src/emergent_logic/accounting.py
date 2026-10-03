@@ -6,7 +6,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from emergent_logic.markov import power, stationary_distribution, validate_kernel
+from emergent_logic.lens import pushforward, validate_lens
+from emergent_logic.markov import power, stationary_weights, validate_kernel
 from emergent_logic.metrics import induced_macro_kernel
 
 
@@ -18,40 +19,34 @@ def entropy_production_rate(
     """
     Return stationary entropy production rate (nats/step) for a discrete-time Markov chain.
 
-    Uses:
+    Positive fluxes are never thresholded to zero: a genuinely one-way
+    positive flux has infinite EPR, but a tiny positive reverse flux does not.
+    Supplied weights must be stationary. Uses:
         sigma = sum_{i,j} a_ij log(a_ij / a_ji),  where a_ij = pi_i * P_ij.
     """
     validate_kernel(P)
+    if not np.isfinite(tol) or tol < 0.0:
+        raise ValueError("tol must be finite and nonnegative.")
     arr = np.asarray(P, dtype=float)
+    # A small negative entry cannot be treated as a probability flux.
+    if np.any(arr < 0.0):
+        raise ValueError("EPR requires nonnegative kernel entries.")
     n = arr.shape[0]
-
-    if pi is None:
-        pi_arr = stationary_distribution(arr)
-    else:
-        pi_arr = np.asarray(pi, dtype=float)
-        if pi_arr.ndim != 1 or pi_arr.shape[0] != n:
-            raise ValueError(f"pi must be 1D with length {n}.")
-        if not np.all(np.isfinite(pi_arr)):
-            raise ValueError("pi contains non-finite values.")
-        if float(pi_arr.min()) < -tol:
-            raise ValueError("pi must be nonnegative within tolerance.")
-        pi_arr = np.where((pi_arr < 0.0) & (pi_arr >= -tol), 0.0, pi_arr)
-        total = float(pi_arr.sum())
-        if total <= tol:
-            raise ValueError("pi must have positive total mass.")
-        pi_arr = pi_arr / total
+    pi_arr = stationary_weights(arr, pi, tol=max(tol, 1e-12))
 
     flux = pi_arr[:, None] * arr
     sigma = 0.0
     for i in range(n):
-        for j in range(n):
+        for j in range(i + 1, n):
             a_ij = float(flux[i, j])
-            if a_ij <= tol:
-                continue
             a_ji = float(flux[j, i])
-            if a_ji <= tol:
+            if a_ij == a_ji:
+                continue
+            if a_ij == 0.0 or a_ji == 0.0:
                 return float(np.inf)
-            sigma += a_ij * np.log(a_ij / a_ji)
+            # Pairing opposite directions is nonnegative and avoids division
+            # overflow when their magnitudes are extremely different.
+            sigma += (a_ij - a_ji) * (np.log(a_ij) - np.log(a_ji))
 
     if -tol < sigma < 0.0:
         return 0.0
@@ -66,34 +61,26 @@ def apparent_entropy_production_rate(
     tol: float = 1e-15,
 ) -> float:
     """
-    Compute apparent Markov EPR of a tau-step coarse-grained approximation induced by lens ``f``.
+    Compute stationary pair-flux EPR for the tau-step macro approximation.
+
+    Uses the pushforward of the *same* micro stationary law, including on
+    reducible chains. The value is in nats per tau-step window (divide by tau
+    for nats per micro tick when tau > 0). It does not assert the projected
+    process is Markovian or measure thermodynamic heat.
     """
     validate_kernel(P)
+    if not np.isfinite(tol) or tol < 0.0:
+        raise ValueError("tol must be finite and nonnegative.")
     arr = np.asarray(P, dtype=float)
-    n = arr.shape[0]
-
-    if weights is None:
-        weight_arr = stationary_distribution(arr)
-    else:
-        weight_arr = np.asarray(weights, dtype=float)
-        if weight_arr.ndim != 1 or weight_arr.shape[0] != n:
-            raise ValueError(f"weights must be 1D with length {n}.")
-        if not np.all(np.isfinite(weight_arr)):
-            raise ValueError("weights contains non-finite values.")
-        if float(weight_arr.min()) < -tol:
-            raise ValueError("weights must be nonnegative within tolerance.")
-        weight_arr = np.where((weight_arr < 0.0) & (weight_arr >= -tol), 0.0, weight_arr)
-
+    weight_arr = stationary_weights(arr, weights, tol=max(tol, 1e-12))
     K = induced_macro_kernel(arr, f, tau=tau, weights=weight_arr)
-    row_sums = K.sum(axis=1)
-    keep = np.where(row_sums > tol)[0]
-    if keep.size == 0:
-        return 0.0
+    macro_pi = pushforward(weight_arr, f)
+    keep = np.flatnonzero(macro_pi > 0.0)
 
     K_reduced = K[np.ix_(keep, keep)]
     if not np.allclose(K_reduced.sum(axis=1), 1.0, atol=max(tol, 1e-12), rtol=1e-12):
         raise ValueError("Reduced coarse-grained kernel rows are not stochastic.")
-    return entropy_production_rate(K_reduced, tol=tol)
+    return entropy_production_rate(K_reduced, pi=macro_pi[keep], tol=tol)
 
 
 def channel_from_kernel(
@@ -111,6 +98,8 @@ def channel_from_kernel(
 
     fin = np.asarray(f_input)
     fout = np.asarray(f_output)
+    validate_lens(fin)
+    validate_lens(fout)
     if fin.ndim != 1 or fin.shape[0] != n:
         raise ValueError(f"f_input must be 1D with length {n}.")
     if fout.ndim != 1 or fout.shape[0] != n:
@@ -157,6 +146,8 @@ def channel_information_measures(
     tol: float = 1e-15,
 ) -> ChannelInfo:
     """Compute Shannon information measures (bits) for a discrete channel."""
+    if not np.isfinite(tol) or tol < 0.0:
+        raise ValueError("tol must be finite and nonnegative.")
     c = np.asarray(channel, dtype=float)
     if c.ndim != 2 or c.shape[0] < 1 or c.shape[1] < 1:
         raise ValueError("channel must be a 2D array with positive dimensions.")
@@ -167,6 +158,7 @@ def channel_information_measures(
     c = np.where((c < 0.0) & (c >= -tol), 0.0, c)
     if not np.allclose(c.sum(axis=1), 1.0, atol=max(tol, 1e-12), rtol=1e-12):
         raise ValueError("channel rows must sum to 1 within tolerance.")
+    c = c / c.sum(axis=1, keepdims=True)
 
     n_inputs = c.shape[0]
     if p_input is None:
@@ -181,8 +173,8 @@ def channel_information_measures(
             raise ValueError("p_input must be nonnegative within tolerance.")
         p_in = np.where((p_in < 0.0) & (p_in >= -tol), 0.0, p_in)
         total = float(p_in.sum())
-        if total <= tol:
-            raise ValueError("p_input must have positive total mass.")
+        if not np.isfinite(total) or total <= tol:
+            raise ValueError("p_input must have finite positive total mass.")
         p_in = p_in / total
 
     p_joint = p_in[:, None] * c

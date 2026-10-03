@@ -1,11 +1,57 @@
 {
   "not": {
+    "confusion": [
+      [
+        488,
+        9512
+      ],
+      [
+        9519,
+        481
+      ]
+    ],
     "entropy": 0.2797739049244776,
     "error": 0.04845,
-    "input_partition_score": 0.9998760623911667,
+    "exact_entropy": 0.28639695711595614,
+    "exact_error": 0.050000000000000044,
+    "exact_truth_table_bits": [
+      1,
+      0
+    ],
+    "input_partition_labels": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "input_partition_score": 0.9998760623911666,
+    "label_convention": "Both partitions label state 0 as 0; swapping one partition exchanges COPY and NOT.",
+    "operator_family": "nonconstant binary channel",
     "output_current_I": 0.0,
-    "output_delta_I": 0.7136030428840437,
-    "output_future_I": 0.7136030428840437,
+    "output_delta_I": 0.7136030428840439,
+    "output_future_I": 0.7136030428840439,
+    "output_partition_labels": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
     "sample_size": 20000,
     "truth_table_bits": [
       1,

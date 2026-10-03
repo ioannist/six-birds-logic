@@ -1,0 +1,343 @@
+MATHEMATICAL AND LEAN REVIEW — 2026-10-03
+
+Scope and result
+
+Reviewed the current manuscript's mathematical definitions and claims against
+all substantive Python and Lean modules, experiment entrypoints, configurations,
+source results, frozen claims, and validation code. The baseline worktree was
+clean and was checkpointed as 9901b1f before changes. No file under paper/ was
+edited. This document records mathematical corrections for the later paper
+phase; it does not make the unchanged manuscript an updated account of the code.
+
+The four main experimental conclusions survive. No title or main-result
+downgrade is needed within the stated scope of controlled finite laboratories.
+This is a self-review, including a separate adversarial pass, not an independent
+review. No external Six Birds theorem is invoked to prove the laboratory results.
+
+1. Exact definability and quotient mathematics
+
+For an arbitrary lens f: Z -> X, a predicate is definable iff it is constant
+on each fiber. The existing Lean proofs of closure under conjunction,
+disjunction and negation were valid. Their definition was factorization; the
+converse from fiber constancy was previously missing. Definable.lean now proves
+both directions, without assuming f is surjective or that either space is
+inhabited. A macro extension can be false off the image. A separate Bool-valued
+factorization theorem bridges binary packaging to this proposition-valued core.
+Truth, falsity, XOR, and pullback through an explicitly descended update are
+also proved. These are ordinary set/predicate facts, not metastability theorems.
+
+QuotientDynamics.lean's original descent proof was valid and genuinely used
+representative consistency. It now proves its converse, uniqueness of the
+induced quotient update, and compatibility with composition. No existence of
+a macro update is hidden in a record field. The only hypothesis is the explicit
+condition that the micro update preserves the equivalence relation.
+
+FiniteExample.lean originally used a Nat-valued parity map to define its
+setoid while declaring a separate Fin 2-valued lens. Both were valid, but their
+connection was not mechanized. It now proves that the setoid is exactly the
+kernel of parityLens, that the lens is onto, that collapseToParityRep preserves
+the lens, and that the resulting quotient update is identity. This example
+certifies parity descent; it is not a formalization of the noisy Markov model.
+
+GateExamples.lean matches the noise-free NOT, AND and CNOT register updates.
+It proves input-register descent, CNOT involutivity/injectivity, impossibility
+of a one-step update on the CNOT target alone, and target descent after two
+ideal ticks. It also proves that the NOT output alone need not descend on the
+whole micro domain. A perfect input/output channel is not state closure.
+
+scripts/check_lean_axioms.py builds the actual project and checks all 32 named
+theorems' transitive axioms. The permitted foundations are Lean's propext,
+Quot.sound and Classical.choice. There are no local axioms, sorry/admit holes,
+or unsafe proof escapes. The Boolean off-image extension uses classical
+decidability; it is not presented as an algorithm for arbitrary infinite spaces.
+The receipt is results/math_review/lean_axioms.json, on Lean 4.28.0.
+
+2. Probability maps, closure, and the RM normalization
+
+Let R_i(y) = sum_{j:f(j)=y} (P^tau)_ij. For nonnegative weights w, write
+W_x = sum_{i:f(i)=x} w_i and W = sum_i w_i. The implemented diagnostic is
+
+  K_x = sum_{i:f(i)=x} (w_i/W_x) R_i,                  when W_x > 0,
+  RM  = sum_{x:W_x>0} (W_x/W)
+          sum_{i:f(i)=x} (w_i/W_x) ||R_i-K_x||_1.
+
+The manuscript's diagnostics RM display omits W_x/W. Its printed unweighted
+sum of normalized fiber errors is a different statistic. The code's global
+mass-weighted diagnostic is retained, with its normalization documented.
+This preserves the reported RM values and makes the mathematical definition
+unambiguous. RM is an average discrepancy, not a worst-case guarantee.
+
+RM = 0 implies consistency on the positive-weight support. It implies full
+lumpability only if all micro weights are positive. A null nonempty fiber can
+have a uniform row extension without changing a weighted diagnostic. Empty
+macro labels produce zero rows and must be removed before treating the matrix
+as a stochastic kernel. Apparent EPR now removes zero-mass labels using the
+actual stationary marginal, rather than an independently selected macro law.
+
+For a lift with unit-mass prototypes supported in their own nonempty fibers,
+Q_f U_f is identity on macro measures supported on the image. Empty fibers
+cannot receive positive mass, even below a floating tolerance. Input measures
+are now checked for negativity before evolution, so signed input cannot be
+hidden by mixing. General linear maps retain nonnegative finite mass; only
+the worst-case diagnostic explicitly restricts its domain to probabilities.
+
+Write T = U_f Q_f. The packaging projection T is idempotent; the dynamic map
+E_tau,f = T after P^tau need not be. The source formula for E was correct.
+The manuscript's description of it as a reduce-first route needs clarification:
+it evolves the original micro measure first, then reduces and lifts.
+
+A single distribution defect Delta(mu) can vanish by cancellation even when
+the lens is not lumpable. In ideal CNOT, a uniform probe gives Delta=0, while
+the output lens has RM=1. The new worst_case_commutation_defect computes
+
+  sup_{mu probability} Delta(mu)
+    = max_i ||R_i - sum_j prototype_{f(i)}(j) R_j||_1.
+
+The equality follows by convexity/triangle inequality and attainment at a
+point mass. This supplies an all-distributions check. For the published
+retained/erased comparison, the selected point probe already attains the
+erased worst case 0.96; no larger closure failure is concealed by that probe.
+The supplementary parity-versus-AND sweep's uniform input is already packaged,
+so both of its original single-probe commutation fields vanish for any kernel.
+Those fields are retained as explicit uniform probes and supplemented with
+comm_full_max and comm_parity_max. All 24 supplementary rows are independently
+checked with rational matrices; odd-horizon CNOT parity failure is now visible
+in both RM and the worst-case commutation field.
+
+3. Exact parity comparison and its scope
+
+The parity-sector kernel has identical rows within each parity fiber, with
+sector transition matrix [[1-p,p],[p,1-p]]. Thus parity RM is exactly zero at
+all horizons, and stability is [1+(1-2p)^tau]/2. Floating values around 1e-16
+are arithmetic noise, not a nonzero mathematical closure obstruction.
+
+At the published leakage biases 4/5 and 7/10, the difference between the two
+micro sector rows after tau ticks equals (1-2p)^(tau-1) times their one-tick
+difference. For the three balanced binary partitions up to complement,
+
+  RM(parity) = 0,
+  RM(a)      = (p/2) |1-2p|^(tau-1),
+  RM(b)      = (p/10)|1-2p|^(tau-1).
+
+Each appears twice among the six labeled balanced assignments. Their exhaustive
+median is (p/10)|1-2p|^(tau-1), strictly positive for 0<p<1/2 and finite tau>=1.
+AND has RM = (2/3)|1/2-6p/5| |1-2p|^(tau-1). Exact Fraction enumeration checks
+these statements on all twelve published grid points. The sampled median
+also remains strictly larger than parity at every point.
+
+This modest strengthening concerns the designed kernel and the exhaustive
+balanced four-state partitions. It is not a theorem that parity dominates
+other variables in arbitrary substrates. The sixty random draws sample with
+replacement from six labelings, hence only three distinct partitions modulo
+complement. They are not sixty distinct coarse variables. Parity is the
+engineered lumpable variable; this is a controlled diagnostic demonstration.
+
+The parity lab's inputs metadata previously described a one-input identity
+gate but supplied four ab input labels. It now uses the parity bit as inputs;
+the ab and full lenses remain available. The identity truth table can now
+be evaluated consistently at all tested horizons.
+
+4. Gate-channel formulas and phase verification
+
+Set m=p_mem, g=p_gate and q_s=[1-(1-2m)^s]/2. For NOT at tau>=1 the truth
+error is g+q_{tau-1}-2g q_{tau-1}, reflecting the output's dependence on the
+input just before the last tick. For AND, given initial a,b, the probability
+of output one is g+(1-2g) r_a r_b, where r_0=q_{tau-1}, r_1=1-q_{tau-1}.
+
+For CNOT, the intended repeated deterministic map is identity at even tau
+and CNOT at odd tau. Its effective target flip probability is
+
+  e_tau = [1-(1-2g)^tau (1-2m)^floor(tau/2)]/2.
+
+The control bit appears in the target an odd number of times only at odd tau;
+exactly floor(tau/2) independent memory flips survive the XOR sum. Error
+against a one-step XOR truth table is e_tau at odd tau and 1/2 at even tau.
+Best-fit deterministic error and conditional entropy still grade the actual
+tau-step channel. The manuscript already cautions about this horizon issue.
+
+scripts/audit_mathematics.py checks every metric in all 108 phase rows against
+these channel formulas. It independently constructs rational macro matrices
+and explicit stationary laws for all RM values. It also verifies grid coverage,
+the barrier/memory parameters, and nonduplicated conditions. No library
+stationary solver or gate-channel implementation is imported by this audit.
+The barrier exponential is represented numerically; Fraction checks use the
+recorded decimal parameters and compare floating outputs with a stated tolerance.
+
+5. Retained versus erased information and the corrected micro readout
+
+In the published CNOT comparison m=0, tau=1, p_gate=0.02 and degeneracy d=3.
+Let h=h_2(0.02)=0.141440542542... . The retained macro channel has
+H_in=2, H_out=2, H_out|in=h, I=2-h, and loss=h. The erased output has
+H_out=1, H_out|in=h, I=1-h, and loss=1+h. Therefore its loss ratio is
+(1+h)/h=8.070108626770... . Erased RM and the selected probe's defect are
+both 1-2p=24/25. Retained closure is exact, and all three EPRs are exactly zero
+for this stationary laboratory. The tiny reported EPRs are roundoff.
+
+The original cnot_micro row said it retained twelve states but computed its
+channel using the four-state output lens, duplicating cnot_macro. It now
+uses the identity micro readout. Random destination degeneracy adds log2(3)
+to both output entropies: H_out=3.58496250072 and H_out|in=1.72640304326.
+Mutual information and unretained input information are unchanged, because
+the added degeneracy is independent noise. Entropy drop becomes -log2(3).
+This illustrates why entropy drop is not, by itself, lost input information.
+
+The main comparison is unaffected. The unchanged paper's claim that all three
+conditional output entropies agree, and its interpretation of the micro row,
+need correction in the writing phase. Observation through the erased lens
+does not physically erase a register or establish a Landauer heat cost.
+The greater-than-eight inequality is additionally certified with rational
+logarithm bounds. For 1<=q<=2, set t=(q-1)/(q+1). Integrating the geometric
+series gives ln(q)=2 sum_{k>=0} t^(2k+1)/(2k+1); after N terms the positive
+tail is at most 2 t^(2N+1)/((2N+1)(1-t^2)). Applying this to 2, 32/25 and
+49/25 bounds h_2(1/50), using ln(1/50)=ln(32/25)-6 ln2 and
+ln(49/50)=ln(49/25)-ln2. The resulting exact interval proves h_2(1/50)<1/7,
+and hence (1+h)/h>8. An outward-rounded rational interval is in audit.json.
+
+6. EPR, stationary laws, and information fitting repairs
+
+The stationary EPR formula is the relative entropy of forward/reverse pair
+fluxes, in nats per kernel tick. For each unordered pair the contribution is
+(a-b)(log(a)-log(b)), nonnegative. Positive one-way flux gives infinity; two
+zero fluxes contribute zero. The old tolerance cutoff could falsely report
+infinity when the reverse flux was tiny but positive, or suppress a genuinely
+one-way tiny flux. Pairing now preserves this distinction and avoids unstable
+division and cancellation. Supplied stationary weights are checked.
+
+Coarse EPR uses the pushforward of the same micro law. Re-solving for a macro
+law can choose a different mixture on a reducible chain and give the wrong
+quantity. Weighted pair-flux aggregation obeys relative-entropy contraction;
+it is a Markov approximation audit, not a claim that the projected process
+is Markovian. For P^tau its units are nats per tau-step window. Divide by tau
+to compare rates per original micro tick when tau>0. The published accounting
+comparison has tau=1, so its rate units are unaffected.
+
+Lazy power iteration removes periodic oscillation while retaining the same
+stationary laws and uniform-initial-mixture convention on reducible chains.
+An absolute residual alone can certify a wildly inaccurate law when all jump
+rates are tiny. The solver and supplied-weight check now also verify relative
+incoming/outgoing flux balance using off-diagonal rates. Slow or ill-conditioned
+cases can raise nonconvergence; no total-variation error bound or uniqueness
+is asserted for arbitrary chains. Positive spectral weights are required,
+rather than silently manufacturing them by flooring a stationary law.
+
+GateFit previously used a smoothed conditional entropy and an unsmoothed
+output entropy, allowing negative mutual information. Both now use one joint
+law. Error remains the empirical statistic. Unsampled input patterns now cause
+an explicit failure rather than an invented complete truth table. Other repairs
+reject signed probabilities, invalid bit-index widths and nonfinite parameters,
+normalize finite large kernel weights without overflow, and reject the unused
+ancilla_mode='erase' option rather than silently treating it as retention.
+
+7. Discovery and orientation
+
+For positive stationary D, additive reversibilization is represented by
+S=(D^(1/2) P^tau D^(-1/2)+its transpose)/2. Threshold cuts should act on the
+micro eigenfunction D^(-1/2)v, not on the conjugated Euclidean eigenvector v.
+The implementation now performs that return to micro coordinates. Numerically
+equal coordinates are grouped before thresholds are formed; the original
+method could split identical degeneracy states and create spurious candidates.
+
+Both benchmark winners still agree exactly with the intended partitions.
+Each now has three meaningful threshold candidates instead of the frozen five.
+The old count was also platform dependent: the initial fresh baseline produced
+four parity candidates. Secondary scores change, but the winners do not.
+Repeated eigenvalues can yield a nonunique second direction; this heuristic
+does not claim to enumerate all possible good partitions or all latent bits.
+
+Output discovery still selects the correct NOT-register partition from the
+kernel, with exact channel error 0.05, exact conditional entropy 0.286396957116,
+future information 0.713603042884 and present information zero. On the same
+balanced 20000-transition sample, fitted error remains 0.04845 and fitted
+entropy remains 0.279773904924. The output now stores the actual partitions,
+the exact kernel statistics, and raw confusion counts, separating exact channel
+quantities from sample statistics. Identity and completely mixing kernels are
+negative controls; they cannot earn an output bit by a zero-gain ranking win.
+
+NOT versus COPY is coordinate dependent when input and output partitions have
+independently selectable binary orientations. The stated convention labels
+state zero as zero for each partition. Under it the recovered truth bits are
+[1,0]; reversing exactly one orientation gives [0,1] with unchanged information
+and error. Thus the pipeline recovers carriers and a nonconstant binary channel,
+and identifies NOT in declared coordinates. It does not discover an intrinsic
+orientation of two unrelated truth alphabets. Rounded behavioral classes are
+an explicitly finite-precision heuristic, not exact bisimulation classes.
+
+8. Semantic boundaries and the later paper phase
+
+All f-definable events form a Boolean algebra automatically. For the stated
+persistence diagnostic S_tau(b)=S_tau(1-b), because equality of labels is
+unchanged by complement. For two binary predicates, failure of any connective
+determined by the pair implies failure of at least one input predicate, giving
+S_tau(connective)>=1-(1-S_tau(b))-(1-S_tau(c)). Hence semantic complements
+cannot fail definability or this persistence test merely because they are
+complements. Physical implementation of NOT remains a separate operation.
+No theorem of non-Boolean event semantics follows from these set-based labs.
+Restricting executable operations or adding richer semantics would be needed
+for such a theorem; the current paper does not actually prove one.
+
+Definition 1 is an operational criterion with unspecified 'small' defects and
+stability thresholds, not a theorem asserting a Boolean layer from one scalar
+score. The experiments do not implement an independent constraint-feasibility
+solver or prove universality for natural substrates. The reasonable supported
+conclusion is the stated finite-laboratory diagnostic program. Later prose
+should retain this distinction, distinguish storage from an active gate's
+input/output channel, and specify thresholds if an actual binary acceptance
+decision for 'has a logic layer' is wanted.
+
+Mandatory later-paper corrections, without changing its main results:
+  - Add macro-mass normalization to the RM definition and qualify support.
+  - Correct the true micro-channel entropy/readout entries and explanation.
+  - Replace the roundoff-dependent candidate counts and secondary scores.
+  - State the eigenfunction return and the NOT/COPY orientation convention.
+  - Distinguish semantic complement from executable negation, single-probe
+    closure from universal closure, and macro-window EPR from micro-tick EPR.
+  - Describe E as evolve/reduce/lift, and distinguish it from U_f Q_f.
+
+9. Claim and evidence audit
+
+CL1-CL3: preserved; all twelve sampled comparisons reproduced, strengthened
+         by exact exhaustive rational comparison of the six balanced labelings.
+CL4-CL7: preserved; all 108 conditions independently checked, no monotonicity
+         anomalies for the reported truth/induced/entropy noise scans.
+CL8-CL10: preserved; analytic ratio 8.070108626770..., erased defect/RM 0.96.
+          Absolute micro output entropies corrected as described above.
+CL11-CL12: preserved; exact partition agreement 1. Candidate counts and lower
+           scores corrected; no claim of global optimality is warranted.
+CL13: preserved in explicit label coordinates; same truth table and sample
+      statistics, with exact channel quantities separately recorded.
+Lean appendix: original elementary proofs valid; missing bridges and converse
+               now added. No claim to mechanize floating experimental results.
+
+The old final-state validator checked only loose thresholds and existence of
+a manifest. It did not check hashes or whether claims came from their sources.
+It now verifies source hashes/sizes, reconstructs the entire frozen numerical
+interface in isolation, applies the independent mathematical audit, and checks
+the actual all-grid/exact-recovery/eightfold headline thresholds. Tests show
+it rejects both source-byte tampering and forged claims that would pass the
+old thresholds. These checks establish provenance and finite-model identities;
+they do not replace the semantic review above.
+
+Reproduction and checks
+
+The Makefile now defaults to python3 (overridable via PYTHON) and its seal
+target runs the independent numerical audit and the transitive Lean axiom
+audit, in addition to tests, reproduction and provenance validation.
+
+  make seal
+  PYTHONPATH=src python3 scripts/reproduce_all.py
+  PYTHONPATH=src python3 scripts/freeze_claims.py
+  PYTHONPATH=src python3 scripts/validate_final_state.py
+  python3 scripts/audit_mathematics.py --output results/math_review/audit.json
+  python3 scripts/check_lean_axioms.py --output results/math_review/lean_axioms.json
+  PYTHONPATH=src python3 -m pytest -q
+  ruff check src scripts experiments tests
+  git diff --check
+
+Frozen source artifacts and the claims bundle have been regenerated. Their
+numerical certificates are under results/math_review/. All tests and the
+fresh Lean build pass. Exact Fraction enumeration covers rational finite
+quantities, and the central eightfold inequality has a rational logarithm
+interval certificate. Other Shannon values, barrier exponentials, and the
+eigenvector pipeline remain floating computations. No arbitrary numerical
+accuracy or mechanized experimental theorem is claimed. The entire paper/
+tree is unchanged.

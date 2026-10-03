@@ -1,26 +1,35 @@
-.PHONY: test run-smoke lint reproduce-all seal paper-assets paper paper-clean paper-flatten
+PYTHON ?= python3
+
+.PHONY: test run-smoke lint reproduce-all seal math-audit lean-audit paper-assets paper paper-clean paper-flatten
 
 test:
-	PYTHONPATH=src python -m pytest -q
+	PYTHONPATH=src $(PYTHON) -m pytest -q
 
 run-smoke:
-	PYTHONPATH=src python -m emergent_logic.smoke
+	PYTHONPATH=src $(PYTHON) -m emergent_logic.smoke
 
 lint:
 	PYTHONPATH=src ruff check .
 
 reproduce-all:
-	PYTHONPATH=src python scripts/reproduce_all.py
+	PYTHONPATH=src $(PYTHON) scripts/reproduce_all.py
 
 seal:
 	$(MAKE) test
 	$(MAKE) reproduce-all
-	PYTHONPATH=src python scripts/freeze_claims.py
-	PYTHONPATH=src python scripts/validate_final_state.py
-	cd lean/LogicClosure && lake build
+	PYTHONPATH=src $(PYTHON) scripts/freeze_claims.py
+	PYTHONPATH=src $(PYTHON) scripts/validate_final_state.py
+	$(MAKE) math-audit
+	$(MAKE) lean-audit
+
+math-audit:
+	$(PYTHON) scripts/audit_mathematics.py --output results/math_review/audit.json
+
+lean-audit:
+	$(PYTHON) scripts/check_lean_axioms.py --output results/math_review/lean_axioms.json
 
 paper-assets:
-	PYTHONPATH=src python scripts/render_paper_assets.py
+	PYTHONPATH=src $(PYTHON) scripts/render_paper_assets.py
 
 paper: paper-assets
 	mkdir -p paper/build

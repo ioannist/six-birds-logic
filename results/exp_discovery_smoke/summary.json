@@ -1,16 +1,16 @@
 {
   "not_best_agreement": 1.0,
-  "not_n_candidates": 5,
+  "not_n_candidates": 3,
   "not_top3_scores": [
-    0.9999832268686049,
-    0.9900281014035447,
-    0.9704481928206606
+    0.9999832268686045,
+    0.9704481928206437,
+    0.9704481928206435
   ],
   "parity_sector_best_agreement": 1.0,
-  "parity_sector_n_candidates": 5,
+  "parity_sector_n_candidates": 3,
   "parity_sector_top3_scores": [
-    0.95,
-    0.7228302581165559,
-    0.6061930022127391
+    0.9499999999999997,
+    0.43202152317886294,
+    0.42923638613869675
   ]
 }

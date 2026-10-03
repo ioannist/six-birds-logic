@@ -77,7 +77,7 @@ def U_f(
     )
 
     for x, idx in enumerate(grouped):
-        if idx.size == 0 and nu_arr[x] > tol:
+        if idx.size == 0 and nu_arr[x] > 0.0:
             raise ValueError(f"Cannot place positive mass on empty fiber for label {x}.")
 
     mu = np.zeros(n_micro, dtype=float)
@@ -107,6 +107,8 @@ def E_tau_f(
         raise ValueError("mu must be a 1D array.")
     if not np.all(np.isfinite(mu_arr)):
         raise ValueError("mu contains non-finite entries.")
+    if np.any(mu_arr < 0.0):
+        raise ValueError("mu must be a nonnegative measure.")
 
     labels = np.asarray(f)
     validate_lens(labels, n_macro=n_macro) if n_macro is not None else validate_lens(labels)

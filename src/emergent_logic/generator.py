@@ -7,7 +7,7 @@ from typing import Callable
 
 import numpy as np
 
-from emergent_logic.gates import bits_to_index, index_to_bits, predicate_stability_kernel
+from emergent_logic.gates import bits_to_index, index_to_bits
 from emergent_logic.lens import pushforward
 from emergent_logic.markov import validate_kernel
 
@@ -58,7 +58,7 @@ def make_gate_lab(
             "a": a,
             "b": b,
             "parity": parity,
-            "inputs": bits_to_index(np.column_stack((a, b))).astype(int, copy=False),
+            "inputs": parity,
             "output": parity,
             "ab": f_full.astype(int, copy=False),
         }
@@ -237,7 +237,10 @@ def gate_error_rate_kernel(
 def _resolve_params(params: dict | None) -> dict:
     raw = {} if params is None else dict(params)
 
-    degeneracy = int(raw.get("degeneracy", 3))
+    degeneracy = raw.get("degeneracy", 3)
+    if not isinstance(degeneracy, (int, np.integer)):
+        raise ValueError("degeneracy must be an integer.")
+    degeneracy = int(degeneracy)
     if degeneracy < 1:
         raise ValueError("degeneracy must be >= 1.")
 
@@ -247,8 +250,10 @@ def _resolve_params(params: dict | None) -> dict:
 
     barrier = float(raw.get("barrier", 6.0))
     base_mem_noise = float(raw.get("base_mem_noise", 0.05))
-    if base_mem_noise < 0.0:
-        raise ValueError("base_mem_noise must be >= 0.")
+    if not math.isfinite(barrier):
+        raise ValueError("barrier must be finite.")
+    if not math.isfinite(base_mem_noise) or base_mem_noise < 0.0:
+        raise ValueError("base_mem_noise must be finite and >= 0.")
 
     if "p_mem" in raw:
         p_mem = float(raw["p_mem"])
@@ -258,8 +263,8 @@ def _resolve_params(params: dict | None) -> dict:
         raise ValueError("resolved p_mem must be in [0,1].")
 
     ancilla_mode = str(raw.get("ancilla_mode", "retain"))
-    if ancilla_mode not in {"retain", "erase"}:
-        raise ValueError("ancilla_mode must be one of {'retain', 'erase'}.")
+    if ancilla_mode != "retain":
+        raise ValueError("The lab retains its registers. Model an erased view using an output lens.")
 
     return {
         "degeneracy": degeneracy,
@@ -274,7 +279,10 @@ def _resolve_params(params: dict | None) -> dict:
 def _resolve_parity_params(params: dict | None) -> dict:
     raw = {} if params is None else dict(params)
 
-    degeneracy = int(raw.get("degeneracy", 3))
+    degeneracy = raw.get("degeneracy", 3)
+    if not isinstance(degeneracy, (int, np.integer)):
+        raise ValueError("degeneracy must be an integer.")
+    degeneracy = int(degeneracy)
     if degeneracy < 1:
         raise ValueError("degeneracy must be >= 1.")
 

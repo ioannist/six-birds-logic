@@ -126,7 +126,7 @@ def _run(cfg: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, float]]:
     rows = []
 
     # View 1: cnot_micro
-    channel_micro = channel_from_kernel(P, f_inputs, f_full, tau=tau)
+    channel_micro = channel_from_kernel(P, f_inputs, f_id, tau=tau)
     info_micro = channel_information_measures(channel_micro)
     rows.append(
         {

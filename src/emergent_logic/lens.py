@@ -78,6 +78,8 @@ def pushforward(mu: np.ndarray, f: np.ndarray, n_macro: int | None = None) -> np
         )
     if not np.all(np.isfinite(weights)):
         raise ValueError("mu contains non-finite entries.")
+    if np.any(weights < 0.0):
+        raise ValueError("mu must be a nonnegative measure.")
 
     out = np.bincount(labels, weights=weights, minlength=macro_count).astype(float, copy=False)
     if not np.isclose(out.sum(), weights.sum(), atol=1e-12, rtol=1e-12):

@@ -2,18 +2,18 @@
   "artifacts": [
     {
       "path": "exp_discovery_smoke/not_candidates.csv",
-      "sha256": "f435ff705e58bb2db33055c39e81329fc3fa864acd2ce4d3ad375383dadffb9c",
-      "size_bytes": 569
+      "sha256": "9a75ee60b77f2d8fec841c5120db0bfb4ed1b3c366d4025d9ba1c51416c0b53f",
+      "size_bytes": 365
     },
     {
       "path": "exp_discovery_smoke/parity_sector_candidates.csv",
-      "sha256": "a7ed5d92c3342c7f39c4396d1f3333a53265c6e1dd7e537fb1411bfde5d3d831",
-      "size_bytes": 583
+      "sha256": "0851e61eb3d85246bde5601c7b7b34cc113a06575602577f2ac5bc6ff29b57b0",
+      "size_bytes": 355
     },
     {
       "path": "exp_discovery_smoke/summary.json",
-      "sha256": "86564937ef59a79f03e5ee4d442d1398323be5f9b6a65178cacd921d039d139e",
-      "size_bytes": 325
+      "sha256": "76f4a9750ae820e20c70731a8330a0f736fd97294ad1b4afc73dd84367c1e946",
+      "size_bytes": 341
     },
     {
       "path": "exp_gate_discovery/config_used.json",
@@ -22,8 +22,8 @@
     },
     {
       "path": "exp_gate_discovery/gates.json",
-      "sha256": "486bd36fb2b7a8b5aefd8c2520d8d1a4f63d0d6ffa34a5f01fcf915d9bd7609c",
-      "size_bytes": 389
+      "sha256": "b55741301fca512b79bba7dddd9f0dc554f2b68ef1c745d74a8cdd1352bafa17",
+      "size_bytes": 1095
     },
     {
       "path": "exp_gate_discovery/not_output_candidates.csv",
@@ -37,13 +37,13 @@
     },
     {
       "path": "exp_gate_phase_diagram/stats.json",
-      "sha256": "4aed9812ee7f0dbbacf2969ec53aaeb7895e766fca5a4ebb93b0b5c61e883f0e",
-      "size_bytes": 775
+      "sha256": "d38fdee42bf58928099f8af7b3d6cabffa2fb966a1712f233cc55e0941ba3563",
+      "size_bytes": 778
     },
     {
       "path": "exp_gate_phase_diagram/summary.csv",
-      "sha256": "fb0ba28f0462e55158111b400fbb3df6dc90c0fe52d67d915c56f7f37f64df0a",
-      "size_bytes": 8550
+      "sha256": "f2e2f90edb8f9a89931a85b74ce24a2584b9a2531504047b5fc0b27a154c6318",
+      "size_bytes": 8649
     },
     {
       "path": "exp_parity_robustness/config_used.json",
@@ -67,13 +67,13 @@
     },
     {
       "path": "exp_parity_vs_and/summary.csv",
-      "sha256": "3f11b91b4e118c740fba22d13fc219430a750194e4e80fd18a39a15542e32a6d",
-      "size_bytes": 2472
+      "sha256": "a4a6582a801bafe46d1454a9a9020ae79047f9258ff8922b481aabfc13adae6d",
+      "size_bytes": 3286
     },
     {
       "path": "exp_reversible_vs_erased/comparison.csv",
-      "sha256": "8a3a657227b771c481753f49ac1d1bafaa9634ed539e1f368634a6ed5f51ce99",
-      "size_bytes": 389
+      "sha256": "aea5c3377b6efd9695fe45b638678d8c8ad9f08c713a513c2b17a5435a1224ac",
+      "size_bytes": 413
     },
     {
       "path": "exp_reversible_vs_erased/config_used.json",
@@ -82,8 +82,8 @@
     },
     {
       "path": "exp_reversible_vs_erased/stats.json",
-      "sha256": "a2d7ebe9c8c8796ab6e2a087189e8778f0573f216f85b7b1679ec0924db0179f",
-      "size_bytes": 243
+      "sha256": "0ec4c082bd7c205b8f775a006d8de7ea8a476a9c8e659f8ce426cee3e1f417a6",
+      "size_bytes": 229
     }
   ],
   "experiments": [

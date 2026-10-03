@@ -89,7 +89,7 @@ def instantaneous_channel(
     """
     fin = np.asarray(f_input)
     fout = np.asarray(f_output)
-    if fin.ndim != 1 or fout.ndim != 1 or fin.shape[0] != fout.shape[0]:
+    if fin.ndim != 1 or fout.ndim != 1 or fin.size == 0 or fin.shape[0] != fout.shape[0]:
         raise ValueError("f_input and f_output must be 1D arrays with matching length.")
     if not np.issubdtype(fin.dtype, np.integer):
         raise ValueError("f_input must have integer dtype.")
@@ -134,9 +134,14 @@ def discover_output_bit_for_input(
     input_labels: np.ndarray,
     tau: int = 1,
     class_labels: np.ndarray | None = None,
+    min_information_gain: float = 1e-12,
 ) -> tuple[OutputBitCandidate, list[OutputBitCandidate]]:
     """
-    Discover binary output partition for a known binary input partition.
+    Discover a binary output partition with positive predictive information gain.
+
+    Input and output labels are independently conventional: swapping exactly
+    one partition exchanges the names COPY and NOT. The returned truth table
+    is expressed in the chosen coordinates, not an invariant operator name.
 
     Ranking (lexicographic):
       1) descending delta_I
@@ -146,6 +151,8 @@ def discover_output_bit_for_input(
       5) ascending |size0-size1|
     """
     validate_kernel(P)
+    if not np.isfinite(min_information_gain) or min_information_gain < 0.0:
+        raise ValueError("min_information_gain must be finite and nonnegative.")
     arr = np.asarray(P, dtype=float)
     n = arr.shape[0]
 
@@ -156,9 +163,13 @@ def discover_output_bit_for_input(
         raise ValueError("input_labels must have integer/bool dtype.")
     if not np.all((inp == 0) | (inp == 1)):
         raise ValueError("input_labels must be binary (0/1).")
+    if np.unique(inp).size != 2:
+        raise ValueError("input_labels must contain both binary classes.")
     inp = inp.astype(int, copy=False)
 
     cls = bidirectional_behavior_classes(arr) if class_labels is None else np.asarray(class_labels)
+    if cls.ndim != 1 or cls.size != n:
+        raise ValueError("class_labels must be 1D with one label per kernel state.")
     parts = binary_partitions_from_classes(cls)
 
     candidates: list[OutputBitCandidate] = []
@@ -221,6 +232,8 @@ def discover_output_bit_for_input(
 
     if not candidates:
         raise RuntimeError("No valid output-bit candidates discovered.")
+    if candidates[0].delta_I <= min_information_gain:
+        raise RuntimeError("No output-bit candidate has positive predictive information gain.")
     return candidates[0], candidates
 
 

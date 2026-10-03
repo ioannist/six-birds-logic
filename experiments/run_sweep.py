@@ -14,7 +14,7 @@ import numpy as np
 
 from emergent_logic.gates import predicate_stability_kernel
 from emergent_logic.generator import gate_error_rate_kernel, make_gate_lab
-from emergent_logic.metrics import distribution_commutation_defect, route_mismatch
+from emergent_logic.metrics import distribution_commutation_defect, route_mismatch, worst_case_commutation_defect
 
 
 REQUIRED_COLUMNS = [
@@ -30,6 +30,8 @@ REQUIRED_COLUMNS = [
     "rm_parity",
     "comm_full",
     "comm_parity",
+    "comm_full_max",
+    "comm_parity_max",
 ]
 
 
@@ -139,13 +141,16 @@ def _run_sweep(cfg: dict[str, Any]) -> list[dict[str, Any]]:
 
             rm_full = route_mismatch(P, f_dict["full"], tau=tau)
             comm_full = distribution_commutation_defect(mu_unif, P, f_dict["full"], tau=tau)
+            comm_full_max = worst_case_commutation_defect(P, f_dict["full"], tau=tau)
 
             if "parity" in f_dict:
                 rm_parity = route_mismatch(P, f_dict["parity"], tau=tau)
                 comm_parity = distribution_commutation_defect(mu_unif, P, f_dict["parity"], tau=tau)
+                comm_parity_max = worst_case_commutation_defect(P, f_dict["parity"], tau=tau)
             else:
                 rm_parity = float("nan")
                 comm_parity = float("nan")
+                comm_parity_max = float("nan")
 
             resolved = meta["params_resolved"]
             rows.append(
@@ -162,6 +167,8 @@ def _run_sweep(cfg: dict[str, Any]) -> list[dict[str, Any]]:
                     "rm_parity": float(rm_parity),
                     "comm_full": float(comm_full),
                     "comm_parity": float(comm_parity),
+                    "comm_full_max": float(comm_full_max),
+                    "comm_parity_max": float(comm_parity_max),
                 }
             )
 

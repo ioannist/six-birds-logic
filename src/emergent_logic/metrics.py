@@ -46,7 +46,12 @@ def induced_macro_kernel(
     n_macro: int | None = None,
     weights: np.ndarray | None = None,
 ) -> np.ndarray:
-    """Estimate induced macro kernel by averaging micro macro-rows inside each fiber."""
+    """Average micro macro-rows inside each fiber.
+
+    A nonempty fiber with zero weight uses a uniform row extension. Such rows
+    have no bearing on weighted diagnostics. Empty labels have zero rows, so
+    the returned matrix is a stochastic kernel only on the occupied labels.
+    """
     labels = np.asarray(f)
     if n_macro is None:
         validate_lens(labels)
@@ -69,6 +74,8 @@ def induced_macro_kernel(
             raise ValueError("weights contains non-finite entries.")
         if float(weight_arr.min()) < 0.0:
             raise ValueError("weights must be nonnegative.")
+        if not np.isfinite(weight_arr.sum()) or weight_arr.sum() <= 0.0:
+            raise ValueError("weights must have finite positive total mass.")
 
     kernel = np.zeros((macro_count, macro_count), dtype=float)
     for x in range(macro_count):
@@ -82,7 +89,8 @@ def induced_macro_kernel(
         local_w = weight_arr[idx]
         w_sum = float(local_w.sum())
         if w_sum <= 0.0:
-            raise ValueError(f"weights on nonempty fiber {x} must sum to > 0.")
+            kernel[x, :] = rows[idx, :].mean(axis=0)
+            continue
         kernel[x, :] = (local_w[:, None] * rows[idx, :]).sum(axis=0) / w_sum
 
     nonempty_rows = np.any(kernel > 0.0, axis=1)
@@ -101,7 +109,13 @@ def route_mismatch(
     weights: np.ndarray | None = None,
     return_per_macro: bool = False,
 ) -> float | tuple[float, np.ndarray]:
-    """Compute route mismatch across fibers, with optional per-macro values."""
+    """Return E_w[||R(i) - K(f(i))||_1], in [0, 2].
+
+    The outer fiber weights are their normalized micro masses, not a sum of
+    fiber-normalized errors. Zero mismatch establishes fiber consistency on
+    the positive-weight support; full lumpability requires positive weights
+    at every microstate. Null fibers contribute zero.
+    """
     labels = np.asarray(f)
     if n_macro is None:
         validate_lens(labels)
@@ -125,6 +139,8 @@ def route_mismatch(
             raise ValueError("weights contains non-finite entries.")
         if float(weight_arr.min()) < 0.0:
             raise ValueError("weights must be nonnegative.")
+        if not np.isfinite(weight_arr.sum()) or weight_arr.sum() <= 0.0:
+            raise ValueError("weights must have finite positive total mass.")
 
     per_macro = np.zeros(macro_count, dtype=float)
     macro_mass = np.zeros(macro_count, dtype=float)
@@ -141,7 +157,7 @@ def route_mismatch(
             local_w = weight_arr[idx]
             w_sum = float(local_w.sum())
             if w_sum <= 0.0:
-                raise ValueError(f"weights on nonempty fiber {x} must sum to > 0.")
+                continue
             per_macro[x] = float(np.dot(local_w, d) / w_sum)
             macro_mass[x] = w_sum
 
@@ -182,6 +198,10 @@ def distribution_commutation_defect(
         )
     if not np.all(np.isfinite(mu_arr)):
         raise ValueError("mu contains non-finite entries.")
+    if np.any(mu_arr < 0.0):
+        raise ValueError("mu must be a nonnegative measure.")
+    if labels.size != P.shape[0]:
+        raise ValueError("lens length must equal P size.")
 
     P_tau = power(P, tau)
     nu1 = pushforward(mu_arr @ P_tau, labels, n_macro=macro_count)
@@ -191,3 +211,28 @@ def distribution_commutation_defect(
     nu2 = pushforward(mu0 @ P_tau, labels, n_macro=macro_count)
 
     return float(np.sum(np.abs(nu1 - nu2)))
+
+
+def worst_case_commutation_defect(
+    P: np.ndarray,
+    f: np.ndarray,
+    tau: int = 1,
+    prototypes: object | None = None,
+    n_macro: int | None = None,
+) -> float:
+    """Maximize the commutation defect over all micro probability laws.
+
+    The difference is linear in mu and its L1 norm is convex, so the maximum
+    over the probability simplex equals the maximum at a point mass. This
+    avoids inferring global closure from a single (possibly cancelling) probe.
+    """
+    rows = micro_to_macro_rows(P, f, tau=tau, n_macro=n_macro)
+    labels = np.asarray(f)
+    macro_count = rows.shape[1]
+    macro_rows = np.zeros((macro_count, macro_count), dtype=float)
+    for x in np.unique(labels):
+        nu = np.zeros(macro_count)
+        nu[x] = 1.0
+        lifted = U_f(nu, labels, prototypes=prototypes, n_macro=macro_count)
+        macro_rows[x] = lifted @ rows
+    return float(np.max(np.abs(rows - macro_rows[labels]).sum(axis=1)))

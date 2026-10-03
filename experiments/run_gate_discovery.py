@@ -82,6 +82,14 @@ def main() -> None:
             "output_delta_I": float(output_best.delta_I),
             "output_future_I": float(output_best.future_I),
             "output_current_I": float(output_best.current_I),
+            "input_partition_labels": input_labels.tolist(),
+            "output_partition_labels": output_best.labels.tolist(),
+            "label_convention": "Both partitions label state 0 as 0; swapping one partition exchanges COPY and NOT.",
+            "operator_family": "nonconstant binary channel",
+            "exact_truth_table_bits": output_best.truth_table_bits.tolist(),
+            "exact_error": float(output_best.error),
+            "exact_entropy": float(output_best.entropy),
+            "confusion": fit.confusion.tolist(),
         }
     }
 
@@ -134,6 +142,8 @@ def _sample_balanced_transitions(
     out = np.asarray(output_labels, dtype=int)
     if inp.ndim != 1 or out.ndim != 1 or inp.shape[0] != out.shape[0]:
         raise ValueError("input_labels and output_labels must be 1D with same length.")
+    if inp.size != arr.shape[0]:
+        raise ValueError("partition labels must match kernel size.")
     if not np.all((inp == 0) | (inp == 1)) or not np.all((out == 0) | (out == 1)):
         raise ValueError("input_labels and output_labels must be binary.")
 
@@ -152,6 +162,7 @@ def _sample_balanced_transitions(
 
     probs = p_tau[starts]
     cdf = np.cumsum(probs, axis=1)
+    cdf[:, -1] = 1.0
     r = rng.random(starts.shape[0])
     next_states = np.sum(cdf < r[:, None], axis=1)
     outputs = out[next_states]

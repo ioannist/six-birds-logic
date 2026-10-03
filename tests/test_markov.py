@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 
 from emergent_logic.markov import power, simulate, stationary_distribution, validate_kernel
 

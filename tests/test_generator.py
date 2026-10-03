@@ -1,4 +1,3 @@
-import numpy as np
 
 from emergent_logic.gates import predicate_stability_kernel
 from emergent_logic.generator import gate_error_rate_kernel, make_gate_lab

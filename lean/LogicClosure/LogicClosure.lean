@@ -5,3 +5,4 @@ import LogicClosure.Hello
 import LogicClosure.Definable
 import LogicClosure.QuotientDynamics
 import LogicClosure.FiniteExample
+import LogicClosure.GateExamples

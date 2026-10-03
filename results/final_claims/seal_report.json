@@ -12,9 +12,52 @@
       "ok": true,
       "value": 1.0
     },
+    "frozen_derivation": {
+      "ok": true,
+      "value": {
+        "error": "",
+        "mismatches": []
+      }
+    },
+    "independent_mathematical_identities": {
+      "ok": true,
+      "value": {
+        "discovery": {
+          "empirical_gate_error": 0.04845,
+          "exact_gate_entropy": 0.28639695711595625,
+          "exact_gate_error": 0.05,
+          "label_gauge": "Both partitions label state 0 as 0; swapping one partition exchanges COPY and NOT.",
+          "partition_agreement": 1.0
+        },
+        "parity_gridpoints": 12,
+        "phase": {
+          "analytic_channel_checks": 108,
+          "complete_grid_rows": 108,
+          "rational_stationary_RM_checks": 108
+        },
+        "reversible": {
+          "analytic_loss_ratio": 8.070108626770313,
+          "erased_RM": "24/25",
+          "ratio_certificate": {
+            "eightfold_inequality_certified": true,
+            "exact_rational_ratio_lower": "807010862677/100000000000",
+            "exact_rational_ratio_upper": "8070108626771/1000000000000"
+          }
+        },
+        "sweep": {
+          "rationally_checked_rows": 24
+        }
+      }
+    },
     "manifest_exists": {
       "ok": true,
       "value": "results/final_manifest.json"
+    },
+    "manifest_integrity": {
+      "ok": true,
+      "value": {
+        "mismatches": []
+      }
     },
     "not_gate_error_threshold": {
       "ok": true,
@@ -50,8 +93,8 @@
     "phase_and_monotone": {
       "ok": true,
       "value": {
-        "p0": 0.022459509677580657,
-        "p01": 0.11796760774206454
+        "p0": 0.022459509677580664,
+        "p01": 0.11796760774206455
       }
     },
     "phase_cnot_monotone": {
@@ -68,8 +111,8 @@
     "phase_not_monotone": {
       "ok": true,
       "value": {
-        "p0": 0.02364324663553814,
-        "p01": 0.11891459730843051
+        "p0": 0.02364324663553817,
+        "p01": 0.11891459730843053
       }
     },
     "phase_row_count": {
@@ -98,7 +141,7 @@
     },
     "rev_erased_rm_delta": {
       "ok": true,
-      "value": 0.9599999999999999
+      "value": 0.96
     }
   },
   "ok": true

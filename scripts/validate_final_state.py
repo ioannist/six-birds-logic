@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -33,7 +37,11 @@ def main() -> None:
     if claims_path.is_file():
         claims = load_json_object(claims_path)
     if manifest_path.is_file():
-        _ = load_json_object(manifest_path)
+        manifest = load_json_object(manifest_path)
+        check_manifest_integrity(checks, results_dir, manifest)
+    if claims_path.is_file():
+        check_frozen_derivation(checks, results_dir)
+    check_mathematical_identities(checks, results_dir)
 
     check_parity_claims(checks, claims)
     check_phase_claims(checks, claims)
@@ -60,7 +68,7 @@ def check_parity_claims(checks: dict[str, dict[str, Any]], claims: dict[str, Any
     p020 = float_or_none(claims.get("parity_rep_p020_tau1_rm"))
     p020_rand = float_or_none(claims.get("random_rep_p020_tau1_median_rm"))
 
-    record_check(checks, "parity_win_rate_threshold", is_valid_number(win) and win >= 0.80, win)
+    record_check(checks, "parity_win_rate_threshold", is_valid_number(win) and win == 1.0, win)
     record_check(
         checks,
         "parity_rep_p005_beats_random",
@@ -115,7 +123,7 @@ def check_reversible_claims(checks: dict[str, dict[str, Any]], claims: dict[str,
     record_check(
         checks,
         "rev_erased_ratio_threshold",
-        is_valid_number(ratio) and ratio > 5.0,
+        is_valid_number(ratio) and ratio > 8.0,
         ratio,
     )
     record_check(
@@ -139,13 +147,13 @@ def check_discovery_claims(checks: dict[str, dict[str, Any]], claims: dict[str, 
     record_check(
         checks,
         "discovery_not_agreement",
-        is_valid_number(not_agreement) and not_agreement >= 0.95,
+        is_valid_number(not_agreement) and not_agreement == 1.0,
         not_agreement,
     )
     record_check(
         checks,
         "discovery_parity_agreement",
-        is_valid_number(parity_agreement) and parity_agreement >= 0.95,
+        is_valid_number(parity_agreement) and parity_agreement == 1.0,
         parity_agreement,
     )
 
@@ -185,6 +193,65 @@ def check_repo_hygiene(checks: dict[str, dict[str, Any]], repo_root: Path) -> No
     ]
     present = [display_path(path, repo_root) for path in stray_paths if path.exists()]
     record_check(checks, "repo_no_stray_outer_lean_scaffold", len(present) == 0, present)
+
+
+def check_manifest_integrity(checks, results_dir, manifest) -> None:
+    from reproduce_all import EXPERIMENTS
+
+    entries = manifest.get("artifacts", [])
+    paths = [entry.get("path", "") for entry in entries]
+    expected = sorted(p.relative_to(results_dir).as_posix()
+                      for name, _ in EXPERIMENTS for p in (results_dir/name).rglob("*")
+                      if p.is_file())
+    valid = (manifest.get("experiments") == [name for name, _ in EXPERIMENTS]
+             and manifest.get("total_artifact_count") == len(entries)
+             and sorted(paths) == expected and len(set(paths)) == len(paths))
+    bad = []
+    for entry in entries:
+        rel = Path(entry["path"])
+        path = results_dir/rel
+        if rel.is_absolute() or ".." in rel.parts or not path.is_file():
+            bad.append(str(rel))
+            continue
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest != entry.get("sha256") or path.stat().st_size != entry.get("size_bytes"):
+            bad.append(str(rel))
+    record_check(checks, "manifest_integrity", valid and not bad, {"mismatches": bad})
+
+
+def check_frozen_derivation(checks, results_dir) -> None:
+    # Reconstruct the numerical interface in isolation. Merely passing broad
+    # thresholds on claims.json cannot establish its source provenance.
+    from reproduce_all import EXPERIMENTS
+
+    with tempfile.TemporaryDirectory(prefix="logic-claims-check-") as tmp:
+        target = Path(tmp)
+        for name, _ in EXPERIMENTS:
+            if (results_dir/name).is_dir():
+                shutil.copytree(results_dir/name, target/name)
+        process = subprocess.run([sys.executable, str(Path(__file__).with_name("freeze_claims.py")),
+                                  "--results-dir", str(target)], capture_output=True, text=True)
+        mismatches = []
+        if process.returncode == 0:
+            for generated in (target/"final_claims").iterdir():
+                actual = results_dir/"final_claims"/generated.name
+                if not actual.is_file() or actual.read_bytes() != generated.read_bytes():
+                    mismatches.append(generated.name)
+        record_check(checks, "frozen_derivation", process.returncode == 0 and not mismatches,
+                     {"mismatches": mismatches, "error": process.stderr.strip()})
+
+
+def check_mathematical_identities(checks, results_dir) -> None:
+    from audit_mathematics import audit_parity, audit_phase, audit_reversible, audit_discovery, audit_sweep
+
+    try:
+        value = {"parity_gridpoints": len(audit_parity(results_dir)),
+                 "phase": audit_phase(results_dir), "reversible": audit_reversible(results_dir),
+                 "discovery": audit_discovery(results_dir)}
+        value["sweep"] = audit_sweep(results_dir)
+        record_check(checks, "independent_mathematical_identities", True, value)
+    except (AssertionError, ValueError, KeyError, OSError) as exc:
+        record_check(checks, "independent_mathematical_identities", False, str(exc))
 
 
 def record_check(

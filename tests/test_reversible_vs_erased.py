@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 import sys
+import math
 from pathlib import Path
 
 
@@ -63,6 +64,12 @@ def test_reversible_vs_erased_demo(tmp_path: Path) -> None:
     )
 
     assert float(by_view["xor_erased_macro"]["rm_view"]) > float(by_view["cnot_macro"]["rm_view"]) + 0.1
+    # The full micro readout includes the independently randomized degeneracy
+    # index: both output entropies gain log2(d), while mutual information stays.
+    micro, macro = by_view["cnot_micro"], by_view["cnot_macro"]
+    for metric in ["H_out", "H_out_given_in"]:
+        assert abs(float(micro[metric]) - float(macro[metric]) - math.log2(3)) < 1e-10
+    assert abs(float(micro["I_in_out"]) - float(macro["I_in_out"])) < 1e-10
 
     stats = json.loads(stats_path.read_text(encoding="utf-8"))
     assert float(stats["ratio_unretained_input_info"]) > 5.0

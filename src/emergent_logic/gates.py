@@ -25,6 +25,8 @@ def bits_to_index(bits: np.ndarray) -> np.ndarray:
         raise ValueError("bits must have integer or bool dtype.")
     if not np.all((arr == 0) | (arr == 1)):
         raise ValueError("bits entries must be in {0, 1}.")
+    if arr.shape[-1] > np.iinfo(np.int_).bits - 1:
+        raise ValueError("bit width exceeds the signed integer index range.")
 
     if arr.ndim == 1:
         k = arr.shape[0]
@@ -45,6 +47,8 @@ def index_to_bits(index: int | np.ndarray, k: int) -> np.ndarray:
     if not isinstance(k, (int, np.integer)) or int(k) < 1:
         raise ValueError("k must be an integer >= 1.")
     k_int = int(k)
+    if k_int > np.iinfo(np.int_).bits - 1:
+        raise ValueError("bit width exceeds the signed integer index range.")
     max_idx = 1 << k_int
 
     idx_arr = np.asarray(index)
@@ -98,8 +102,8 @@ def predicate_stability_kernel(
             raise ValueError("mu must be nonnegative within tolerance.")
         mu_arr = np.where((mu_arr < 0.0) & (mu_arr >= -tol), 0.0, mu_arr)
         mu_sum = float(mu_arr.sum())
-        if mu_sum <= tol:
-            raise ValueError("mu must have positive total mass.")
+        if not np.isfinite(mu_sum) or mu_sum <= tol:
+            raise ValueError("mu must have finite positive total mass.")
         mu_arr = mu_arr / mu_sum
 
     eq = (pred_arr[:, None] == pred_arr[None, :]).astype(float)
@@ -152,8 +156,8 @@ def fit_gate_from_samples(
     ``inputs`` can be bit patterns of shape (n, k) or integer indices of shape (n,).
     ``outputs`` must be shape (n,) with values in {0,1}.
     """
-    if smoothing < 0.0:
-        raise ValueError("smoothing must be >= 0.")
+    if not np.isfinite(smoothing) or smoothing < 0.0:
+        raise ValueError("smoothing must be finite and >= 0.")
 
     out = np.asarray(outputs)
     if out.ndim != 1:
@@ -210,6 +214,8 @@ def fit_gate_from_samples(
     table = (confusion[:, 1] > confusion[:, 0]).astype(int)
 
     row_sums = confusion.sum(axis=1)
+    if np.any(row_sums == 0):
+        raise ValueError("Every input pattern must have samples to infer a complete gate.")
     total = float(n)
     errors = float((row_sums - np.max(confusion, axis=1)).sum())
     error_rate = errors / total
@@ -217,12 +223,15 @@ def fit_gate_from_samples(
     confusion_eff = confusion + float(smoothing) if smoothing > 0.0 else confusion.copy()
     row_sums_eff = confusion_eff.sum(axis=1)
     total_eff = float(row_sums_eff.sum())
+    if not np.isfinite(total_eff):
+        raise ValueError("smoothed counts must have finite total mass.")
 
     p_row = confusion_eff / row_sums_eff[:, None]
     H_rows = _binary_entropy(p_row[:, 0], p_row[:, 1])
     H_out_given_in = float(np.dot(row_sums_eff / total_eff, H_rows))
 
-    p_out = confusion.sum(axis=0) / total
+    # Both entropy terms must refer to the same (possibly smoothed) joint law.
+    p_out = confusion_eff.sum(axis=0) / total_eff
     H_out = float(_binary_entropy(np.array([p_out[0]]), np.array([p_out[1]]))[0])
     I_in_out = H_out - H_out_given_in
 

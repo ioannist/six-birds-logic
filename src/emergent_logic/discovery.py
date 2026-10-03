@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from emergent_logic.gates import predicate_stability_kernel
-from emergent_logic.markov import power, stationary_distribution, validate_kernel
+from emergent_logic.markov import power, stationary_weights, validate_kernel
 from emergent_logic.metrics import route_mismatch
 
 
@@ -40,17 +40,27 @@ def spectral_second_vector(
     pi: np.ndarray | None = None,
     tol: float = 1e-15,
 ) -> tuple[float, np.ndarray]:
-    """Compute second eigenpair of reversibilized/symmetrized tau-step operator."""
+    """Return second eigenvalue and microstate eigenfunction of reversibilization.
+
+    Requires a positive stationary law. Thresholds must act on D^(-1/2)v,
+    not the Euclidean coordinates v of the conjugated symmetric matrix.
+    With repeated eigenvalues the eigensolver selects one candidate direction;
+    no uniqueness of the discovered partition is asserted.
+    """
     validate_kernel(P)
+    if not np.isfinite(tol) or tol <= 0.0:
+        raise ValueError("tol must be finite and > 0.")
     arr = np.asarray(P, dtype=float)
     n = arr.shape[0]
     if n < 2:
         raise ValueError("Need at least 2 states to compute a second spectral vector.")
 
     P_tau = power(arr, tau)
-    pi_arr = stationary_distribution(arr) if pi is None else _normalize_prob(pi, n, tol)
+    pi_arr = stationary_weights(arr, pi, tol=max(tol, 1e-12))
+    if np.any(pi_arr <= 0.0):
+        raise ValueError("Spectral discovery requires positive stationary weights on all states.")
 
-    sqrt_pi = np.sqrt(np.maximum(pi_arr, tol))
+    sqrt_pi = np.sqrt(pi_arr)
     inv_sqrt = 1.0 / sqrt_pi
 
     M = (sqrt_pi[:, None] * P_tau) * inv_sqrt[None, :]
@@ -59,7 +69,7 @@ def spectral_second_vector(
     eigvals, eigvecs = np.linalg.eigh(S)
     order = np.argsort(eigvals)[::-1]
     eig2 = float(eigvals[order[1]])
-    v2 = eigvecs[:, order[1]].astype(float, copy=True)
+    v2 = eigvecs[:, order[1]].astype(float, copy=True) * inv_sqrt
 
     # Fix sign deterministically; eigensolvers may otherwise flip signs across runs.
     i_ref = int(np.argmax(np.abs(v2)))
@@ -76,6 +86,8 @@ def binary_thresholds_from_vector(
 ) -> np.ndarray:
     """Generate deterministic threshold candidates from midpoints between unique values."""
     arr = np.asarray(v, dtype=float)
+    if not np.isfinite(tol) or tol < 0.0:
+        raise ValueError("tol must be finite and nonnegative.")
     if arr.ndim != 1:
         raise ValueError("v must be a 1D array.")
     if not np.all(np.isfinite(arr)):
@@ -85,7 +97,10 @@ def binary_thresholds_from_vector(
     if uniq.size < 2:
         return np.array([], dtype=float)
 
-    mids = 0.5 * (uniq[:-1] + uniq[1:])
+    # Ignore gaps attributable to eigensolver noise *before* forming cuts.
+    # Otherwise almost equal coordinates spuriously split identical states.
+    gaps = np.diff(uniq)
+    mids = (0.5 * uniq[:-1] + 0.5 * uniq[1:])[gaps > tol]
     if mids.size == 0:
         return np.array([], dtype=float)
 
@@ -117,9 +132,8 @@ def spectral_binary_candidates(
     """Generate/scored binary partitions by thresholding the second spectral vector."""
     validate_kernel(P)
     arr = np.asarray(P, dtype=float)
-    n = arr.shape[0]
 
-    pi_arr = stationary_distribution(arr) if pi is None else _normalize_prob(pi, n, tol)
+    pi_arr = stationary_weights(arr, pi, tol=max(tol, 1e-12))
     eigenvalue2, vec2 = spectral_second_vector(arr, tau=tau, pi=pi_arr, tol=tol)
     thresholds = binary_thresholds_from_vector(vec2, max_thresholds=max_thresholds)
 
@@ -200,18 +214,3 @@ def _as_binary_labels(values: np.ndarray, name: str) -> np.ndarray:
     if not np.all((arr == 0) | (arr == 1)):
         raise ValueError(f"{name} values must be binary (0/1).")
     return arr.astype(int, copy=False)
-
-
-def _normalize_prob(pi: np.ndarray, n: int, tol: float) -> np.ndarray:
-    arr = np.asarray(pi, dtype=float)
-    if arr.ndim != 1 or arr.shape[0] != n:
-        raise ValueError(f"pi must be 1D with length {n}.")
-    if not np.all(np.isfinite(arr)):
-        raise ValueError("pi contains non-finite values.")
-    if float(arr.min()) < -tol:
-        raise ValueError("pi must be nonnegative within tolerance.")
-    arr = np.where((arr < 0.0) & (arr >= -tol), 0.0, arr)
-    s = float(arr.sum())
-    if s <= tol:
-        raise ValueError("pi must have positive total mass.")
-    return arr / s
